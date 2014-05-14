@@ -42,10 +42,6 @@ goto exit
     echo [x] Building and packaging application...
     mimosa build -omp
 
-:upl
-    echo [x] Upload application...
-    call node ftpDeploy.js
-    goto exit
 
 :dist
     echo [x] Building and distributing application...
