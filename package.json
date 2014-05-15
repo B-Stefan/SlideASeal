@@ -6,7 +6,9 @@
     "consolidate": "0.10.0",
     "handlebars": "1.2.1",
     "coffee-script": "1.6.3",
-    "express": "3.4.7"
+    "express": "3.4.7",
+    "socket.io": "*",
+    "underscore": "*"
   },
   "devDependencies": {
     "mimosa-coffeescript": "*",
