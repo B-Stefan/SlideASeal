@@ -1,7 +1,11 @@
-
+body {
+	background-color: black;
+}
 
 #gamefield{
     background-image: url('../Images/Hintergrund.png');
     background-size: cover;
     width: 800px;
+    margin-left: auto;
+    margin-right: auto;
 }

@@ -4,11 +4,13 @@
   "description": "A Mimosa starter skeleton",
   "dependencies": {
     "consolidate": "0.10.0",
-    "handlebars": "1.2.1",
+    "express3-handlebars": "*",
     "coffee-script": "1.6.3",
     "express": "3.4.7",
     "socket.io": "*",
-    "underscore": "*"
+    "underscore": "*",
+    "sass-middleware": "*",
+    "colors": "*"
   },
   "devDependencies": {
     "mimosa-coffeescript": "*",
