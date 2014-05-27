@@ -2,7 +2,8 @@
  * Created by Besitzer on 14.05.2014.
  */
 
-define(['phaser', 'jquery', 'network', '_'],function (Phaser, $, network, _){
+define(['phaser', 'jquery', './Panel', 'network', '_'],function (Phaser, $, Panel, network, _){
+
     var shipStripe;
     var game = new Phaser.Game(800, 600, Phaser.AUTO, 'gamefield', { preload: preload, create: create, update: update }, true);
     var name = "Peter";
@@ -16,19 +17,28 @@ define(['phaser', 'jquery', 'network', '_'],function (Phaser, $, network, _){
         network.addNewGameStateEventListener(handelGameState);  // Is called when a new GameState arrives
         network.addDisconnectEventListener(handelDisconnect);   // Is called when a Disconnect happend
         network.register(name, sessionid);
+
+        Panel.loadAllTypes(game)
     }
     
     function create () {
+        game.physics.startSystem(Phaser.Physics.ARCADE);
+        panel = new Panel(game,Panel.types.FISH, 0,100)
+        panel = new Panel(game,Panel.types.FISH, 0,0)
 
         shipStripe = game.add.sprite(game.world.width, 80, 'ship');
+
         shipStripe.scale.setTo(0.9 , 0.9);
-        game.physics.enable(shipStripe,Phaser.Physics.ARCADE);
         //shipStripe.body.velocity.x = -1000;
         game.add.tween(shipStripe).to({x:-20}, 5000, Phaser.Easing.Quadratic.Out, true, 0, false);
 
     }
 
     function update(){
+
+        if(game.input.mousePointer.isDown){
+            panel.forEach(game.physics.moveTowardsMouse, game.physics, false, 200);
+        }
 
     }
 
