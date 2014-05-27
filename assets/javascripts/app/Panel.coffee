@@ -24,7 +24,7 @@ define ['Phaser', "jquery"], (Phaser, $)->
       game.load.image("Panel_Background", PanelType.baseUrl + "Allubox.png")
 
 
-    constructor : (game, type, x = 0 ,y = 0,frame) ->
+    constructor : (game, type, x = 0 ,y = 0) ->
       if not type of Panel.types
         console.log("please parse one of the following type", Panel.types)
 

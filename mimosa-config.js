@@ -17,6 +17,7 @@ exports.config = {
     "views": {
       "compileWith": "handlebars",
       "extension": "hbs"
-    }
+    },
+    path: 'mimosa-server.js'
   }
 }

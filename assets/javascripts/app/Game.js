@@ -2,7 +2,7 @@
  * Created by Besitzer on 14.05.2014.
  */
 
-define(['phaser', 'jquery', './Panel', 'network', '_'],function (Phaser, $, Panel, network, _){
+define(['Phaser', 'jquery', './Panel', 'network', '_'],function (Phaser, $, Panel, network, _){
 
     var shipStripe;
     var game = new Phaser.Game(800, 600, Phaser.AUTO, 'gamefield', { preload: preload, create: create, update: update }, true);
