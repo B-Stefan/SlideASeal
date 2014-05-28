@@ -68,9 +68,11 @@ var GameSession = require('./class/GameSession');
                 console.log("observer");
                 session.joinAsObserver(socket);
             } else {
-                session = GameSession.createSession(socket, data.sessionid);
+                session = new GameSession.GameSession(socket, data.sessionid);
                 console.log("New Session created with ID: " + session.getSessionId());
                 socket.sessionid = session.getSessionId();
+                session.start();
+
                 GameSessions.push(session);
             }
             
@@ -78,7 +80,9 @@ var GameSession = require('./class/GameSession');
 
         socket.on("slide", function(data) {
             console.log("Player " + socket.name + " slided at " + data.m + ", " + data.n);
-            GameSession.findGameSession(GameSessions, socket.sessionid).sendGameState();
+            var session = GameSession.findGameSession(GameSessions, socket.sessionid);
+            session.getGameState().update(data.m, data.n);
+            session.sendGameState();
         });
 
     });

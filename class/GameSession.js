@@ -1,16 +1,17 @@
-var Field = require('./Field');
+var _ = require("underscore");
 
-exports.createSession = function (inSocket, inSessionId) {
+var GameState = require("./GameState");
+
+exports.GameSession = function (inSocket, inSessionId) {
     // Private Property;
     var socket1   = inSocket;
     var socket2   = null;
     var observers = []; // an Array of Sockets for Obersvers
-    var field     = new Field.createField();
+    var state     = new GameState.GameState();
     var id        = inSessionId;
     var started   = false;
 
     // Public Property
-    //this.id = inSessionId;
 
     // Private Methode
     function broadcast(inType, inData) {
@@ -31,8 +32,8 @@ exports.createSession = function (inSocket, inSessionId) {
         return id;
     }
 
-    this.getField = function() {
-        return field;
+    this.getGameState = function() {
+        return state;
     }
 
     this.joinAsPlayer = function(inSocket2) {
@@ -46,11 +47,11 @@ exports.createSession = function (inSocket, inSessionId) {
     }
 
     this.sendGameState = function () {
-        broadcast("GameState", field);
+        broadcast("GameState", state);
     }
 
     this.sendGameStart = function () {
-        broadcast("GameStart", field);
+        broadcast("GameStart", state);
     }
 
     this.isFull = function () {
