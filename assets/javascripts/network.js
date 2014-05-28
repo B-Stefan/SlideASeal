@@ -3,6 +3,9 @@ define(['_'], function () {
     var NewGameStateFunction;
     var DisconnectFunction;
 
+    var name;
+    var sessionid;
+
     socket = io.connect();
         console.log('SlideASeal Network Modul');
         console.log('Socket.io v' + io.version + ' - Protocol: ' + io.protocol);
@@ -11,11 +14,14 @@ define(['_'], function () {
     register = function(inName, inSessionId) {
         console.log("SEND: register with name: " + inName + ", sessionid: " + inSessionId );
         socket.emit('register', { name: inName, sessionid: inSessionId });
+
+        name = inName;
+        sessionid  = inSessionId;
     }
 
     slide = function(m, n) {
         console.log("SEND: slide with m: " + m + ", n: " + n );
-        socket.emit('slide', { m: m, n: n }); 
+        socket.emit('slide', { m: m, n: n });
     }
 
     // Response
@@ -31,9 +37,10 @@ define(['_'], function () {
 
 
     socket.on('disconnect', function(data) {
-        console.log("RECEIVE: disconnect");
-
-        // handel disconnect?
+        console.log("RECEIVE: disconnect and try to register after 4s again");
+        setTimeout(function() {
+            register(name, sessionid);
+        }, 4000);
     });
 
     // EventListener
