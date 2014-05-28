@@ -52,12 +52,22 @@ define(['Phaser', 'jquery', './Panel', 'network', '_'],function (Phaser, $, Pane
     function handelGameStart(data){
         console.log('!!! GameStart !!!');
         console.log(data);
+        console.log("The next Panel is: " + data.nextPanels[0]);
+        for(var i = 0; i < 5; i++) {
+            console.log("| " + data.field[i][0] + " | " + data.field[i][1] + " | " + data.field[i][2] + " | " + data.field[i][3] + " | " + data.field[i][4] + " |")
+            console.log("|---|---|---|---|---|")
+        }
     }
 
     // handel GameState
     function handelGameState(data){
         console.log('!!! New GameState !!!');
         console.log(data);
+        console.log("The next Panel is: " + data.nextPanels[0]);
+        for(var i = 0; i < 5; i++) {
+            console.log("| " + data.field[i][0] + " | " + data.field[i][1] + " | " + data.field[i][2] + " | " + data.field[i][3] + " | " + data.field[i][4] + " |")
+            console.log("|---|---|---|---|---|")
+        }
     }
 
     // handel Disconnect
