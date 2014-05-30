@@ -7,16 +7,17 @@ define(['Phaser', 'jquery', './Panel', 'network', '_'],function (Phaser, $, Pane
     var shipStripe;
     var game = new Phaser.Game(800, 600, Phaser.AUTO, 'gamefield', { preload: preload, create: create, update: update }, true);
     var name = "Peter";
-    var sessionid = $("#sessionid").text();         // in the future parsed from the dom 
+    var sessionid = $("#sessionid").text(); 
 
    function preload() {
         game.load.image('ship','../Images/Schiff.svg');
 
         // establish Network Connection 
-        network.addGameStartEventListener(handelGameStart);     // Is called when two Players are in one Game
-        network.addNewGameStateEventListener(handelGameState);  // Is called when a new GameState arrives
-        network.addDisconnectEventListener(handelDisconnect);   // Is called when a Disconnect happend
-        network.register(name, sessionid);
+        network.addGameStartEventListener(handelGameStart);     // is called when the game starts
+        network.addNewGameStateEventListener(handelGameState);  // is called when a new GameState arrives
+        network.addScoreEventListener(handelScore);             // is called when new Score information are available
+        network.addDisconnectEventListener(handelDisconnect);   // is called when a disconnect happend
+        network.register(name, sessionid);                      // register the client at the server and join a session
 
         Panel.loadAllTypes(game)
     }
@@ -68,6 +69,14 @@ define(['Phaser', 'jquery', './Panel', 'network', '_'],function (Phaser, $, Pane
             console.log("| " + data.field[i][0] + " | " + data.field[i][1] + " | " + data.field[i][2] + " | " + data.field[i][3] + " | " + data.field[i][4] + " |")
             console.log("|---|---|---|---|---|")
         }
+    }
+
+   // handel Score
+    function handelScore(data){
+        console.log('!!! Score !!!');
+        console.log("you score is: " + data.you.score);
+        console.log("rival score is: " + data.rival.score);
+        //console.log(data);
     }
 
     // handel Disconnect

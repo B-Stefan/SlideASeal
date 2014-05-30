@@ -3,12 +3,16 @@ var _ = require("underscore");
 var Action = require("./Action.js"),
     Field = require("./Field.js");
 
+/**
+ * Creates an instance of Field.
+ *
+ * @constructor
+ * @this {Field}
+ */
 exports.Field = function () {
-	// Private Property;
-    var field = generateTestField();
-    //var field = generateRandomField();
-
-    // Public Property
+    /** @access private */
+    //var field = generateTestField();
+    var field = generateRandomField();
 
     // Private Methode
     function getRandom(min, max) {
@@ -196,30 +200,30 @@ exports.Field = function () {
 }
 
 /**
-* Search in a array for a chain of Values and return the amount of them.
-* Example with inValue=2
-* 1.) [2, 2, 2, 5, 3] -> 3
+* Search in a array for a series of types and return the amount of them.
+*
+* Example with inType=2
+* 1.) [2, 2, 2, 5, 2] -> 3
 * 2.) [2, 3, 2, 4, 2] -> 1
+*
 * @param {number} inValue - the Search value
 * @param {Array} inArray - the Array seach in
-* @returns {Number} - amount of values in the array
+* @returns {Number} - amount of values in a series
 */ 
-exports.countPanelsInSerie = function (inValue, inArray) {
-    var scorecount = 0;
+exports.countPanelsInSerie = function (inType, inArray) {
+    var count = 0;
     var loop = true;
-    // console.log(inArray);
-    // console.log("inValue:" + inValue);
+
     var i = 0;
-    while(loop && inValue != 0) {
-        if (inArray[i] == inValue) {
-            scorecount++;
-            // console.log("scorecount:" + scorecount + ", i:" + i);
-        } else if(inArray[i] != inValue) {
+    while(loop && inType != 0) {
+        if (inArray[i] == inType) {
+            count++;
+        } else if(inArray[i] != inType) {
             loop = false;
         }
         
         i++;
     }
 
-    return scorecount;
+    return count;
 }

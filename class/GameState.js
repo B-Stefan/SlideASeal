@@ -8,17 +8,20 @@ var Field     = require("./Field"),
  *
  * @constructor
  * @this {GameState}
+ * @returns {this}
  */
 exports.GameState = function () {
-	// Private Property;
-    var field     = new Field.Field(); // Field Object
-    var actions   = [];
+	/** @access private */
+    var field           = new Field.Field();    // Field Object
+    var actions         = [];                   
+    var sliderSocket    = undefined;            // this socket can 
+    var started         = false;
 
-    // Public Property
-    this.count     = 1;
-    this.nextPanels= generatePanel();
-    this.actions   = [];
-    this.field     = field.getField();  // Field Array for the Client
+    /** @access public */
+    this.count          = 1;
+    this.nextPanels     = generatePanel();
+    this.actions        = [];
+    this.field          = field.getField();     // Field Array for the Client
 
     // Private Methode
     function getRandom(min, max) {
@@ -38,32 +41,44 @@ exports.GameState = function () {
     function score() {
         for(var m = 0; m<5; m++) {
             for(var n = 0; n<5; n++) {
-                var type = field.getElement(m, n);
 
-                // Horizontal
+                // horizontal
+                var type = field.getElement(m, n);
                 var rowrest = field.getRow(m).slice(n);
-                var score = Field.countPanelsInSerie(type, rowrest);
-                if (score >= 3) {
-                    field.handelHorizontalScore(m, n, score);
+                var count = Field.countPanelsInSerie(type, rowrest);
+                if (count >= 3) {
+                    field.handelHorizontalScore(m, n, count);
+
+                    var score = getScoreValue(type, count);
+                    sliderSocket.score += score;
+
                     data = {
                         Score:  { 
                             type: type,
+                            count: count,
                             score: score,
                             orientation: "horizontal"
                         }
                     }
+
                     console.log("horizontal score found");
                     return new Action.Action("Score", data);
                 }
 
-                // Vertical
+                // vertical
+                var type = field.getElement(m, n);
                 var columnrest = field.getColumn(n).slice(m);
-                var score = Field.countPanelsInSerie(type, columnrest);
-                if (score >= 3) {
-                    field.handelVerticalScore(m, n, score);
+                var count = Field.countPanelsInSerie(type, columnrest);
+                if (count >= 3) {
+                    field.handelVerticalScore(m, n, count);
+
+                    var score = getScoreValue(type, count);
+                    sliderSocket.score += score;
+
                     data = {
                         Score:  { 
                             type: type,
+                            count: count,
                             score: score,
                             orientation: "vertical"
                         }
@@ -78,37 +93,115 @@ exports.GameState = function () {
         console.log("no score found");
         return undefined;
     }
+
+    function getScoreValue(inType, inCount) {
+        var value;
+        var multiplier;
+
+        switch(inType) {
+            case 7:
+                // plutonium barrel
+                value = 150;
+                break;
+            case 6:
+                // fish
+                value = 100;
+                break;
+            case 5:
+                // waterball
+                value = 70;
+                break;
+            case 4:
+                // fish remains
+                value = 40;
+                break;
+            case 3:
+                // life ring
+                value = 30;
+                break;
+            case 2:
+                // steering wheel
+                value = 20;
+                break;
+            case 1:
+                // anchor
+                value = 10;
+                break;
+        }
+
+        switch(inCount) {
+            case 3: 
+                multiplier = 1;
+                break;
+            case 4:
+                multiplier = 2;
+                break;
+            case 5:
+                multiplier = 3;
+                break;
+        }
+
+        return value * multiplier;
+    }
     
     function addAction(inAction) {
         actions.push(inAction) ;
         console.log("action added from type: " + inAction.type);
     }
 
+    this.startGame = function() {
+        started = true;
+    }
+
+    this.isStarted = function() {
+        return started;
+    }
+
     // Public Methode
-    this.update = function(m, n) {
-        actions = [];
+    this.update = function(inSocket, inSession, inM, inN) {
 
-        var nextPanel = this.nextPanels[0];
-        addAction( field.slidePanelIn(m, n, nextPanel));
+        if(inSocket == sliderSocket) {
+            console.log("Player " + inSocket.name + " slided at " + inM + ", " + inN);
 
-        var loop = true;
+            actions = [];
 
-        while(true) {
-            var scoreaction = score();
-            if (scoreaction == undefined) {
-                break;
+            var nextPanel = this.nextPanels[0];
+            addAction( field.slidePanelIn(inM, inN, nextPanel));
+
+            var loop = true;
+
+            while(true) {
+                var scoreaction = score();
+                if (scoreaction == undefined) {
+                    break;
+                }
+                    
+                addAction(scoreaction);
             }
-            
-            addAction( scoreaction );
+
+            // Switch the current Player, if no score happend
+            if(actions.length == 1) {
+                var nextSliderSocket = inSession.getOtherSocket(inSocket);
+                console.log("now its " + nextSliderSocket.name + "turn!")
+
+                this.setSliderSocket( nextSliderSocket);
+            }
+
+
+            // update nextPanel
+            this.nextPanels = _.last(this.nextPanels, 2);
+            this.nextPanels.push(getRandom(1,7));
+
+            this.field = field.getField();  // Copy current Field
+            this.actions = actions;         // Copy current Actions
+            this.count++;
+        } else {
+            console.log("not Player " + inSocket.name + " turn!");
         }
+    }
 
-        // update nextPanel
-        this.nextPanels = _.last(this.nextPanels, 2);
-        this.nextPanels.push(getRandom(1,7));
-
-        this.field = field.getField();  // Copy current Field
-        this.actions = actions;         // Copy current Actions
-        this.count++;
+    this.setSliderSocket = function(inSocket) {
+        sliderSocket = inSocket;
     }
 
     return this;

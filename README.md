@@ -7,8 +7,7 @@ A Slide a Lama clone
 #Aufgaben
 
 ##Server
-* Punktermittlung und Übertragung zum Client
-* State für den der gerade am Zug ist zum GameState hinzufügen
+* Erstellen eines Spielfeldes ohne Tripple.
 
 ##Client
 * Hintergrund (Schiff + Eisberg)

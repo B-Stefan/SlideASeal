@@ -1,6 +1,7 @@
 define(['_'], function () {
     var GameStartFunction;
     var NewGameStateFunction;
+    var ScoreFunction;
     var DisconnectFunction;
 
     var name;
@@ -35,6 +36,10 @@ define(['_'], function () {
         NewGameStateFunction(data);
     });
 
+    socket.on('Score', function(data) {
+        console.log("RECEIVE: Score");
+        ScoreFunction(data);
+    });
 
     socket.on('disconnect', function(data) {
         console.log("RECEIVE: disconnect and try to register after 4s again");
@@ -52,6 +57,10 @@ define(['_'], function () {
         NewGameStateFunction = inFunction;
     }
 
+    addScoreEventListener = function(inFunction) {
+        ScoreFunction = inFunction;
+    }
+
     addDisconnectEventListener = function(inFunction) {
         DisconnectFunction = inFunction;
     }
@@ -62,6 +71,7 @@ define(['_'], function () {
         slide: slide,
         addGameStartEventListener: addGameStartEventListener,
         addNewGameStateEventListener: addNewGameStateEventListener,
+        addScoreEventListener: addScoreEventListener,
         addDisconnectEventListener: addDisconnectEventListener
     };
 
