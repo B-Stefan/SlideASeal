@@ -8,7 +8,6 @@ A Slide a Lama clone
 
 ##Server
 * Punktermittlung und Übertragung zum Client
-* Bereinung vom Spielfeld. (Steine müssen herunterfallen)
 * State für den der gerade am Zug ist zum GameState hinzufügen
 
 ##Client

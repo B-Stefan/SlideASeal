@@ -42,7 +42,7 @@ exports.GameState = function () {
 
                 // Horizontal
                 var rowrest = field.getRow(m).slice(n);
-                var score = countValuesInArray(type, rowrest);
+                var score = Field.countPanelsInSerie(type, rowrest);
                 if (score >= 3) {
                     field.handelHorizontalScore(m, n, score);
                     data = {
@@ -58,7 +58,7 @@ exports.GameState = function () {
 
                 // Vertical
                 var columnrest = field.getColumn(n).slice(m);
-                var score = countValuesInArray(type, columnrest);
+                var score = Field.countPanelsInSerie(type, columnrest);
                 if (score >= 3) {
                     field.handelVerticalScore(m, n, score);
                     data = {
@@ -79,35 +79,6 @@ exports.GameState = function () {
         return undefined;
     }
     
-    /**
-    * Search in a array for a chain of Values and return the amount of them.
-    * Example with inValue=2
-    * 1.) [2, 2, 2, 5, 3] -> 3
-    * 2.) [2, 3, 2, 4, 2] -> 1
-    * @param {number} inValue - the Search value
-    * @param {Array} inArray - the Array seach in
-    * @returns {Number} - amount of values in the array
-    */ 
-    function countValuesInArray(inValue, inArray) {
-        var scorecount = 0;
-        var loop = true;
-        // console.log(inArray);
-        // console.log("inValue:" + inValue);
-        var i = 0;
-        while(loop && inValue != 0) {
-            if (inArray[i] == inValue) {
-                scorecount++;
-                // console.log("scorecount:" + scorecount + ", i:" + i);
-            } else if(inArray[i] != inValue) {
-                loop = false;
-            }
-            
-            i++;
-        }
-
-        return scorecount;
-    }
-
     function addAction(inAction) {
         actions.push(inAction) ;
         console.log("action added from type: " + inAction.type);

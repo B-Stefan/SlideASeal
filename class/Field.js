@@ -1,11 +1,12 @@
 var _ = require("underscore");
 
-var Action = require("./Action.js");
+var Action = require("./Action.js"),
+    Field = require("./Field.js");
 
 exports.Field = function () {
 	// Private Property;
-    //var field = generateTestField();
-    var field = generateRandomField();
+    var field = generateTestField();
+    //var field = generateRandomField();
 
     // Public Property
 
@@ -25,9 +26,12 @@ exports.Field = function () {
 
     function generateTestField() {
         var newfield = [];
-        for(var i = 1; i < 6; i++) {
-            newfield.push([8, 2, 2, 2, 2]);
-        }
+        
+        newfield.push([1, 2, 3, 4, 2]);
+        newfield.push([4, 2, 2, 2, 2]);
+        newfield.push([1, 4, 6, 4, 4]);
+        newfield.push([2, 3, 6, 4, 2]);
+        newfield.push([2, 3, 3, 4, 2]);
 
         return newfield;
     }
@@ -85,15 +89,65 @@ exports.Field = function () {
     }
 
     function purgeColumn(inColumn) {
+        var buffer = [];
+        var newColumnArray = [];
+        var columnArray = getColumn(inColumn);   
 
+        var save =0;
+        for(var i = 0; i<5; i++) {
+
+            if(columnArray[i] != 0){
+                buffer.push(columnArray[i]);
+            } else {
+                save++;
+            }
+        }
+
+        for(var j = 0; j<save; j++) {
+            newColumnArray.push(0);
+        }
+
+        for(var k = 0; k<buffer.length; k++) {
+            newColumnArray.push(buffer[k]);
+        }
+
+        setColumn(inColumn, newColumnArray);
     }
 
     function purgeSpaces() {
-        // Copy Down
-        for(var column = 0; column < column.length; column++) {
-            console.log("Purge column " + column);
-            purgeColumn(column);
+        for(var i = 0; i < 5; i++) {
+            purgeColumn(i);
         } 
+    }
+
+    function getElement(m, n) {
+        return field[m][n];
+    }
+
+    function getColumn(inColumn) {
+        var column = [];
+
+        for(var i=0; i<5; i++) {
+            column.push(field[i][inColumn]);
+        }
+
+        return column;
+    }
+
+    function setColumn(inColumn, inArray) {
+        for(var i=0; i<5; i++) {
+            field[i][inColumn] = inArray[i];
+        }
+    }
+
+    function getRow(inRow) {
+         var row = [];
+
+        for(var i=0; i<5; i++) {
+            row.push(field[inRow][i]);
+        }
+
+        return row;
     }
 
     // Public Methode   
@@ -126,28 +180,46 @@ exports.Field = function () {
     }
 
     this.getElement = function(m, n) {
-        return field[m][n];
+        return getElement(m, n);
     }
 
     this.getColumn = function(inColumn) {
-        var column = [];
 
-        for(var i=0; i<5; i++) {
-            column.push(field[i][inColumn]);
-        }
-
-        return column;
+        return getColumn(inColumn);
     }
 
     this.getRow = function(inRow) {
-        var row = [];
-
-        for(var i=0; i<5; i++) {
-            row.push(field[inRow][i]);
-        }
-
-        return row;
+        return getRow(inRow);
     }
 
     return this;
+}
+
+/**
+* Search in a array for a chain of Values and return the amount of them.
+* Example with inValue=2
+* 1.) [2, 2, 2, 5, 3] -> 3
+* 2.) [2, 3, 2, 4, 2] -> 1
+* @param {number} inValue - the Search value
+* @param {Array} inArray - the Array seach in
+* @returns {Number} - amount of values in the array
+*/ 
+exports.countPanelsInSerie = function (inValue, inArray) {
+    var scorecount = 0;
+    var loop = true;
+    // console.log(inArray);
+    // console.log("inValue:" + inValue);
+    var i = 0;
+    while(loop && inValue != 0) {
+        if (inArray[i] == inValue) {
+            scorecount++;
+            // console.log("scorecount:" + scorecount + ", i:" + i);
+        } else if(inArray[i] != inValue) {
+            loop = false;
+        }
+        
+        i++;
+    }
+
+    return scorecount;
 }
