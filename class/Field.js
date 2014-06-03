@@ -40,7 +40,8 @@ exports.Field = function () {
         return newfield;
     }
 
-    function slideVerticalOutLeft(m, inPanel) {
+    
+    function slideHorizontalInLeft(m, inPanel) {
         var line = m - 1;
 
         var old = _.first(field[line], 4)
@@ -58,7 +59,7 @@ exports.Field = function () {
         return new Action.Action("Slide", data);
     }
 
-    function slideHorizontalOutTop(n, inPanel) {
+    function slideVerticalInTop(n, inPanel) {
         var line = n - 1;
 
         var input = inPanel;
@@ -79,7 +80,7 @@ exports.Field = function () {
         return new Action.Action("Slide", data);
     }
 
-    function slideVerticalOutRight(m, inPanel) {
+    function slideHorizontalInRight(m, inPanel) {
         var line = m - 1;
         field[line] = _.last(field[line], 4)
         field[line].push(inPanel);
@@ -157,11 +158,11 @@ exports.Field = function () {
     // Public Methode   
     this.slidePanelIn = function (m, n, newPanel) {
         if(n == 0) {
-            return slideVerticalOutLeft(m, newPanel);
+            return slideHorizontalInLeft(m, newPanel);
         } else if (m == 0) {
-            return slideHorizontalOutTop(n, newPanel);
+            return slideVerticalInTop(n, newPanel);
         } else if (n == 6) {
-            return slideVerticalOutRight(m, newPanel);
+            return slideHorizontalInRight(m, newPanel);
         }
     }
 
