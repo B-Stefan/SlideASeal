@@ -1,7 +1,11 @@
 define(['_'], function () {
     var GameStartFunction;
     var NewGameStateFunction;
+    var ScoreFunction;
     var DisconnectFunction;
+
+    var name;
+    var sessionid;
 
     socket = io.connect();
         console.log('SlideASeal Network Modul');
@@ -11,11 +15,14 @@ define(['_'], function () {
     register = function(inName, inSessionId) {
         console.log("SEND: register with name: " + inName + ", sessionid: " + inSessionId );
         socket.emit('register', { name: inName, sessionid: inSessionId });
+
+        name = inName;
+        sessionid  = inSessionId;
     }
 
     slide = function(m, n) {
         console.log("SEND: slide with m: " + m + ", n: " + n );
-        socket.emit('slide', { m: m, n: n }); 
+        socket.emit('slide', { m: m, n: n });
     }
 
     // Response
@@ -29,11 +36,16 @@ define(['_'], function () {
         NewGameStateFunction(data);
     });
 
+    socket.on('Score', function(data) {
+        console.log("RECEIVE: Score");
+        ScoreFunction(data);
+    });
 
     socket.on('disconnect', function(data) {
-        console.log("RECEIVE: disconnect");
-
-        // handel disconnect?
+        console.log("RECEIVE: disconnect and try to register after 4s again");
+        setTimeout(function() {
+            register(name, sessionid);
+        }, 4000);
     });
 
     // EventListener
@@ -43,6 +55,10 @@ define(['_'], function () {
 
     addNewGameStateEventListener = function(inFunction) {
         NewGameStateFunction = inFunction;
+    }
+
+    addScoreEventListener = function(inFunction) {
+        ScoreFunction = inFunction;
     }
 
     addDisconnectEventListener = function(inFunction) {
@@ -55,6 +71,7 @@ define(['_'], function () {
         slide: slide,
         addGameStartEventListener: addGameStartEventListener,
         addNewGameStateEventListener: addNewGameStateEventListener,
+        addScoreEventListener: addScoreEventListener,
         addDisconnectEventListener: addDisconnectEventListener
     };
 

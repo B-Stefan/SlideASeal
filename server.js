@@ -53,32 +53,44 @@ var GameSession = require('./class/GameSession');
 
         // register players
         socket.on("register", function (data) {
-            console.log("New Player: " + data.name);
+            console.log("register Player with Name: " + data.name);
             socket.name = data.name;
+            socket.score = 0;
 
             var session = GameSession.findGameSession(GameSessions, data.sessionid);
             
             if(session != undefined && !(session.isFull())) {
-                session = session.joinAsPlayer(socket);
-                console.log("join Session created with ID: " + session.getSessionId());
+                // join session
+                session.joinAsPlayer(socket);
+                console.log("join Session as Player - ID: " + session.getSessionId());
                 socket.sessionid = session.getSessionId();
 
-                session.start();
+                session.startSession();
             } else if(session != undefined && session.isFull()) {
-                console.log("observer");
+                // join session as observer
+                console.log("join Session as Observer - ID: " + session.getSessionId());
                 session.joinAsObserver(socket);
-            } else {
-                session = GameSession.createSession(socket, data.sessionid);
-                console.log("New Session created with ID: " + session.getSessionId());
                 socket.sessionid = session.getSessionId();
+
+                session.sendGameState();
+            } else {
+                // create session
+                session = new GameSession.GameSession(socket, data.sessionid);
+                console.log("open Session as Player - ID: " + session.getSessionId());
+                socket.sessionid = session.getSessionId();
+
                 GameSessions.push(session);
             }
             
         });
 
         socket.on("slide", function(data) {
-            console.log("Player " + socket.name + " slided at " + data.m + ", " + data.n);
-            GameSession.findGameSession(GameSessions, socket.sessionid).sendGameState();
+            var session = GameSession.findGameSession(GameSessions, socket.sessionid);
+
+            if(session.getGameState().isStarted()) {                
+                session.getGameState().update(socket, session, data.m, data.n);
+                session.sendGameState();
+            }
         });
 
     });

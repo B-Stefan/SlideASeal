@@ -7,7 +7,7 @@ A Slide a Lama clone
 #Aufgaben
 
 ##Server
-
+* Erstellen eines Spielfeldes ohne Tripple.
 
 ##Client
 * Hintergrund (Schiff + Eisberg)
