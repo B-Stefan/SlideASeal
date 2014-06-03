@@ -26,6 +26,8 @@ define(['Phaser', 'jquery', './Panel', 'network', '_', 'app/Gamefield'],function
         network.register(name, sessionid);                      // register the client at the server and join a session
 
         Panel.loadAllTypes(game)
+        game.load.spritesheet('Robbe', '../Images/Robbe.png', 520, 520, 17);
+        game.load.spritesheet('Robbe2', '../Images/RobbeBall.png', 520, 520, 18);
     }
     
     function create () {
@@ -50,9 +52,17 @@ define(['Phaser', 'jquery', './Panel', 'network', '_', 'app/Gamefield'],function
 
         shipStripe.scale.setTo(0.9 , 0.9);
         game.add.tween(shipStripe).to({x:-20}, 5000, Phaser.Easing.Quadratic.Out, true, 0, false);
+        robbe_eins = game.add.sprite(630, 400, 'Robbe');
+        robbe = game.add.sprite(600, 430, 'Robbe2');
 
-
-
+        robbe.scale.set(0.3);
+        robbe_eins.scale.set(0.28);
+        anim = robbe.animations.add('walk');
+        anim.play( 13, true );
+        anim_eins = robbe_eins.animations.add('walk');
+        anim_eins.play( 10, true );
+        anim = robbe.animations.add('walk');
+        anim.play( 13, true );
     }
 
     function update(){
