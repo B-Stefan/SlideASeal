@@ -31,20 +31,16 @@ define(['Phaser', 'jquery', './Panel', 'network', '_', 'app/Gamefield'],function
     function create () {
         game.physics.startSystem(Phaser.Physics.P2JS);
         shipStripe = game.add.sprite(game.world.width, 80, 'ship');
-        gamefield = new Gamefield(game)
-
-        //gamefield.enableBodyDebug = true;
-        test3 = game.add.sprite(300, 180, 'Panel_Background');
+        gamefield = new Gamefield(game, 4)
 
         game.physics.p2.restitution = 0.0;
         game.physics.p2.gravity.y = 300;
         window.test = gamefield
-
-
+        setTimeout(gamefield.testFunction,1000)
         //test = gamefield.children[0].getBackgroundSprite()
         //test2 = gamefield.children[1].getBackgroundSprite()
 
-        game.physics.p2.enable(gamefield,true,true)
+
 
 
 
