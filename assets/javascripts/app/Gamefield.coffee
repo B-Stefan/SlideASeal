@@ -145,6 +145,8 @@ define ['Phaser', './Panel'], (Phaser,Panel)->
 
 
       @slide(rowIndex,colIndex,direction)
+      @slidePanel(newPanel,direction)
+
 
     slide: (rowIndex,colIndex,direction)=>
       ###
@@ -154,14 +156,15 @@ define ['Phaser', './Panel'], (Phaser,Panel)->
        |---|---|---|---|---| Game.js:85
       ###
       if direction ==  Panel.moveDirections.DOWN
-        col = @getCol(colIndex)
+        panels = @getCol(colIndex)
       else
-        row = @getRow(rowIndex)
+        panels = @getRow(rowIndex)
         #Umsortieren, da immer das letzte element entfernt wird
         if direction == Panel.moveDirections.LEFT
-          row = row.reverse()
+          panels = panels.reverse()
 
-        @slidePanels(row,direction)
+
+      @slidePanels(panels,direction)
 
     slidePanel: (panel,direction) =>
       if direction of Panel.moveDirections
@@ -195,7 +198,7 @@ define ['Phaser', './Panel'], (Phaser,Panel)->
               @game.physics.p2.enable(panel)
               panel.body.gravity.y = 300
               panel.body.velocity.x = velocity
-              @remove(panel,true)
+              #@remove(panel,true)
           ,@)
 
       else if direction == Panel.moveDirections.DOWN
