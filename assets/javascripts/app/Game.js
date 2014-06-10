@@ -47,9 +47,7 @@ define(['Phaser', 'jquery', './Panel', 'network', '_', 'app/Gamefield', 'app/Nex
         //test = gamefield.children[0].getBackgroundSprite()
         //test2 = gamefield.children[1].getBackgroundSprite()
 
-
-
-
+        game.physics.p2.enable(gamefield,true,true)
 
         shipStripe.scale.setTo(0.9 , 0.9);
         game.add.tween(shipStripe).to({x:-20}, 5000, Phaser.Easing.Quadratic.Out, true, 0, false);
