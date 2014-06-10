@@ -26,8 +26,8 @@ define(['Phaser', 'jquery', './Panel', 'network', '_', 'app/Gamefield'],function
         network.register(name, sessionid);                      // register the client at the server and join a session
 
         Panel.loadAllTypes(game)
-        //game.load.spritesheet('Robbe', '../Images/Robbe.png', 520, 520, 17);
-        //game.load.spritesheet('Robbe2', '../Images/RobbeBall.png', 520, 520, 18);
+        game.load.spritesheet('Robbe', '../Images/Robbe.png', 520, 520, 17);
+        game.load.spritesheet('Robbe2', '../Images/RobbeBall.png', 520, 520, 18);
     }
     
     function create () {
@@ -38,7 +38,7 @@ define(['Phaser', 'jquery', './Panel', 'network', '_', 'app/Gamefield'],function
         game.physics.p2.restitution = 0.0;
         game.physics.p2.gravity.y = 300;
         window.test = gamefield
-
+        setTimeout(gamefield.testFunction,1000)
         //test = gamefield.children[0].getBackgroundSprite()
         //test2 = gamefield.children[1].getBackgroundSprite()
 
@@ -51,7 +51,6 @@ define(['Phaser', 'jquery', './Panel', 'network', '_', 'app/Gamefield'],function
         robbe_eins = game.add.sprite(630, 400, 'Robbe');
         robbe = game.add.sprite(600, 430, 'Robbe2');
 
-        /*
         robbe.scale.set(0.3);
         robbe_eins.scale.set(0.28);
         anim = robbe.animations.add('walk');
@@ -60,7 +59,6 @@ define(['Phaser', 'jquery', './Panel', 'network', '_', 'app/Gamefield'],function
         anim_eins.play( 10, true );
         anim = robbe.animations.add('walk');
         anim.play( 13, true );
-        */
     }
 
     function update(){
