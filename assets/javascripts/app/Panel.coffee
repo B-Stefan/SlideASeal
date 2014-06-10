@@ -20,6 +20,7 @@ define ['Phaser', "jquery"], (Phaser, $)->
       LEFT: 10
       RIGHT: 20
       DOWN: 30
+      TOP: 40
     }
     # @static
     # @enum
@@ -34,17 +35,35 @@ define ['Phaser', "jquery"], (Phaser, $)->
       game.load.image("Panel_Background", PanelType.baseUrl + "Allubox.png")
 
 
-    constructor : (game,parent, type, x = 0 ,y = 0) ->
+    constructor : (game,parent, type) ->
       if not type of Panel.types
         console.log("please parse one of the following type", Panel.types)
 
-      super(game,x,y,'Panel_Background')#type.getName())
-      @game.physics.p2.enable(@)
+
+      super(game,0,0,'Panel_Background')#type.getName())
+
       @setType(type)
-      @x =x
-      @y =y
 
+      @_SAS_col = 0
+      @_SAS_row = 0
 
+    setPosition: (row,col, border=0)=>
+      console.log(border)
+      @setRow(row)
+      @setCol(col)
+      bounds = @getBounds()
+      @y = row * (bounds.height + border)
+      @x = col * (bounds.width + border)
+      #super(x,y)
+
+    setRow: (row)=>
+      @_SAS_row = row
+
+    setCol: (col)=>
+      @_SAS_col = col
+
+    getRow:()=> @_SAS_row
+    getCol: ()=> @_SAS_col
 
     setType:(type)=>
       @_SAS_type = type
@@ -52,16 +71,5 @@ define ['Phaser', "jquery"], (Phaser, $)->
 
     getType: ()=> @_SAS_type
 
-    slide: (direction ) =>
-      if direction of Panel.moveDirections
-        throw  new Error("Please use a type of " + Panel.moveDirections + " but you use " + direction)
 
-      dim = @.getBounds()
-      switch direction
-        when Panel.moveDirections.LEFT then @body.moveLeft(dim.width)
-        when Panel.moveDirections.RIGHT then @body.moveRight(dim.width)
-        when Panel.moveDirections.DOWN then alert("Not Implement")
-
-
-      console.log(@.getBounds())
 

@@ -37,19 +37,17 @@ define(['Phaser', 'jquery', './Panel', 'network', '_', 'app/Gamefield', 'app/Nex
         gamefield = new Gamefield(game)
         panelindikator = new NextPanelIndikator(game);
 
-
         //gamefield.enableBodyDebug = true;
         test3 = game.add.sprite(300, 180, 'Panel_Background');
 
         game.physics.p2.restitution = 0.0;
         game.physics.p2.gravity.y = 300;
         window.test = gamefield
-
-
+        setTimeout(gamefield.testFunction,1000)
         //test = gamefield.children[0].getBackgroundSprite()
         //test2 = gamefield.children[1].getBackgroundSprite()
 
-        game.physics.p2.enable(gamefield,true,true)
+
 
 
 

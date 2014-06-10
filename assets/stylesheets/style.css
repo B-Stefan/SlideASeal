@@ -1,11 +1,28 @@
 body {
-	background-color: black;
+	background-color: whitesmoke;
 }
 
 #gamefield{
     background-image: url('../Images/Hintergrund.png');
     background-size: cover;
-    width: 800px;
+    position: relative;
+    left: 219px;
+    top: 107px;
+    width: 787px;
+    height: 590px;
+
+
+}
+.app-warper {
+    width: 1200px;
     margin-left: auto;
     margin-right: auto;
+}
+.ipad {
+    background-image:url('../Images/IPadFrame.png');
+    background-repeat: no-repeat;
+    background-size: cover;
+    height: 1000px;
+
+
 }
