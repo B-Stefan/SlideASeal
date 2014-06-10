@@ -1,11 +1,13 @@
 define ['Phaser', "jquery"], (Phaser, $)->
 
   class PanelType
-    @baseUrl = './images/panels/'
-    @defaultExtention = '.svg'
-    constructor: (name)->
+    @baseUrl = "//"+ window.location.host + '/images/panels/'
+    @defaultExtention = '.png'
+    constructor: (name,id)->
       @name = name
+      @id = id
     getName: ()=> @name
+    getId: ()=> @id
     getImageUrl: ()=>  PanelType.baseUrl + @name + PanelType.defaultExtention
 
 
@@ -23,19 +25,34 @@ define ['Phaser', "jquery"], (Phaser, $)->
 
     #@static
     #@desc: Reutrns a random type
-    @getRandomType:() ->
+    @getTypeRandom:() ->
       values = []
       for key, value of Panel.types
         values.push(value)
 
       randomType = values[Math.floor(Math.random() * values.length)]
       return randomType
+
+    #@static
+    #@desc: Returns the type with the id s
+    #@return {Panel|null} the panel with the id
+    @getTypeById:(id) ->
+      for key, value of Panel.types
+        if id == value.getId()
+          return value
+      return null
+
     # @static
     # @enum
     @types  = {
-      BALL: new PanelType('BALL')
-      FISH: new PanelType('FISH')
-      ANCHOR: new PanelType('ANCHOR')
+      ANCHOR:   new PanelType('ANCHOR',1)
+      WHEEL:    new PanelType('ANCHOR',2)
+      LIFEBELT: new PanelType('ANCHOR',3)
+      FISH_REST:new PanelType('FISH',4)
+      BALL:     new PanelType('BALL',5)
+      FISH:     new PanelType('BALL',6)
+      BARREL:   new PanelType('BALL',7)
+
 
     }
 
@@ -58,24 +75,23 @@ define ['Phaser', "jquery"], (Phaser, $)->
       @backgroundSprite = @create(0,0, 'Panel_Background')
       @typeSprite = @create(0,0, type.getName())
 
+
       #Set Anchor to middel
+
       @backgroundSprite.anchor.setTo(0.5,0.5)
       @typeSprite.anchor.setTo(0.5,0.5)
 
       #Correct anchor
-      @backgroundSprite.x = @backgroundSprite.getBounds().height/2
-      @backgroundSprite.y = @backgroundSprite.getBounds().width/2
 
       #Correct anchor and scale
-      @typeSprite.x = @typeSprite.getBounds().height/2
-      @typeSprite.y = @typeSprite.getBounds().width/2
+
       @typeSprite.scale.setTo(0.8,0.8)
 
 
       @setType(type)
 
-      @_SAS_col = 0
-      @_SAS_row = 0
+      @_SAS_col = -1
+      @_SAS_row = -1
 
     setPosition: (row,col, border=0)=>
       @setRow(row)
