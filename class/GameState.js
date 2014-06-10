@@ -53,7 +53,9 @@ exports.GameState = function () {
                     sliderSocket.score += score;
 
                     data = {
-                        Score:  { 
+                        Score:  {
+                            m: m,
+                            n: n,
                             type: type,
                             count: count,
                             score: score,
@@ -76,7 +78,9 @@ exports.GameState = function () {
                     sliderSocket.score += score;
 
                     data = {
-                        Score:  { 
+                        Score:  {
+                            m: m,
+                            n: n,
                             type: type,
                             count: count,
                             score: score,
