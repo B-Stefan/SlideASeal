@@ -19,7 +19,7 @@ define ['Phaser', './Panel'], (Phaser,Panel)->
     createGamefield: (size)=>
       for row in [0..size]
         for col in  [0..size]
-          @add(new Panel(@game,@,Panel.types.FISH),row,col)
+          @add(new Panel(@game,@,Panel.types.ANCHOR),row,col)
 
 
     add: (panel, row, col, animation = false)=>
@@ -27,11 +27,11 @@ define ['Phaser', './Panel'], (Phaser,Panel)->
         throw  new Error "Please set as argument an panel object"
 
       panel.setPosition(row,col, @getPanelBorder())
-      super(panel)
 
       #Animation
       if animation == true
         @slideNewPanelIn(row,col,panel)
+      super(panel)
 
 
     getRow: (rowIndex) =>
@@ -174,13 +174,13 @@ define ['Phaser', './Panel'], (Phaser,Panel)->
       newX  =   panel.x
       newY =    panel.y
 
-      console.log(panel)
+
       switch direction
         when Panel.moveDirections.LEFT  then newX = newX-(dim.width   + @getPanelBorder())
         when Panel.moveDirections.RIGHT then newX = newX+(dim.width   + @getPanelBorder())
         when Panel.moveDirections.DOWN  then newY = newY+(dim.width   + @getPanelBorder())
 
-      @game.add.tween(panel).to({x:newX, y: newY}, 1000, Phaser.Easing.Quadratic.Out, true, 0, false);
+      @game.add.tween(panel).to({x:newX, y: newY}, 1000, Phaser.Easing.Quadratic.In, true, 0, false);
 
     slidePanels:(panels, direction)=>
       lastTween = ()-> throw  new Error "No Last Tween set"
@@ -189,15 +189,15 @@ define ['Phaser', './Panel'], (Phaser,Panel)->
           lastTween = @slidePanel(panel,direction)
 
       if direction == Panel.moveDirections.LEFT or direction == Panel.moveDirections.RIGHT
-        velocity = 100
+        velocity = 250
         if direction == Panel.moveDirections.LEFT
           velocity = velocity *-1
 
         lastTween.onComplete.add(
             (panel)->
               @game.physics.p2.enable(panel)
-              panel.body.gravity.y = 300
-              panel.body.velocity.x = velocity
+              panel.setAll('body.gravity.y', 300)
+              panel.setAll('body.velocity.x',velocity)
               #@remove(panel,true)
           ,@)
 
@@ -206,10 +206,9 @@ define ['Phaser', './Panel'], (Phaser,Panel)->
           (panel)->
             panel.destroy()
             @remove(panel,true)
-
         ,@)
       else
-        throw Error ("Wrong direct your direction is "+direction)
+        throw Error ("Wrong direct: Your direction is "+direction)
 
 
     update: ()=>
@@ -225,7 +224,8 @@ define ['Phaser', './Panel'], (Phaser,Panel)->
         #if the mouse pointer is above the bottom
         if boundsGorup.bottom > y
           #Check right or left corridor
-          if (boundsGorup.top-80 < y and  boundsGorup.top > y) or ((boundsGorup.left-100 < x and boundsGorup.left > x ) or  (boundsGorup.right+100 > x and boundsGorup.right < x))
+
+          if (boundsGorup.top-100 < y and  boundsGorup.top > y) or ((boundsGorup.left-100 < x and boundsGorup.left > x ) or  (boundsGorup.right+100 > x and boundsGorup.right < x))
               #Gamefield hat ein neues Panel zum plazieren => Maus folgen
 
               panelToUpdatePosition.x = @game.input.mousePointer.x;
@@ -259,7 +259,6 @@ define ['Phaser', './Panel'], (Phaser,Panel)->
       panel = new Panel(@game,null,Panel.types.FISH)
       panel.x = 100
       panel.y = 300
-      #panel.anchor.setTo(0.5,0.5)
       @game.add.existing(panel);
       neighbor = @getNeighbor(panel)
 

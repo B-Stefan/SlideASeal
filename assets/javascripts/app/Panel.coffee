@@ -1,7 +1,7 @@
 define ['Phaser', "jquery"], (Phaser, $)->
 
   class PanelType
-    @baseUrl = '../../images/'
+    @baseUrl = './images/panels/'
     @defaultExtention = '.svg'
     constructor: (name)->
       @name = name
@@ -9,9 +9,7 @@ define ['Phaser', "jquery"], (Phaser, $)->
     getImageUrl: ()=>  PanelType.baseUrl + @name + PanelType.defaultExtention
 
 
-
-
-  class Panel extends Phaser.Sprite
+  class Panel extends Phaser.Group
 
 
     # @static
@@ -22,13 +20,27 @@ define ['Phaser', "jquery"], (Phaser, $)->
       DOWN: 30
       TOP: 40
     }
+
+    #@static
+    #@desc: Reutrns a random type
+    @getRandomType:() ->
+      values = []
+      for key, value of Panel.types
+        values.push(value)
+
+      randomType = values[Math.floor(Math.random() * values.length)]
+      return randomType
     # @static
     # @enum
     @types  = {
+      BALL: new PanelType('BALL')
       FISH: new PanelType('FISH')
+      ANCHOR: new PanelType('ANCHOR')
+
     }
 
     @loadAllTypes: (game)->
+
       for key,type of Panel.types
         game.load.image(type.getName(), type.getImageUrl())
 
@@ -40,7 +52,25 @@ define ['Phaser', "jquery"], (Phaser, $)->
         console.log("please parse one of the following type", Panel.types)
 
 
-      super(game,0,0,'Panel_Background')#type.getName())
+      super(game,parent,'PANEL_GROUP',true)#type.getName())
+
+
+      @backgroundSprite = @create(0,0, 'Panel_Background')
+      @typeSprite = @create(0,0, type.getName())
+
+      #Set Anchor to middel
+      @backgroundSprite.anchor.setTo(0.5,0.5)
+      @typeSprite.anchor.setTo(0.5,0.5)
+
+      #Correct anchor
+      @backgroundSprite.x = @backgroundSprite.getBounds().height/2
+      @backgroundSprite.y = @backgroundSprite.getBounds().width/2
+
+      #Correct anchor and scale
+      @typeSprite.x = @typeSprite.getBounds().height/2
+      @typeSprite.y = @typeSprite.getBounds().width/2
+      @typeSprite.scale.setTo(0.8,0.8)
+
 
       @setType(type)
 
@@ -48,12 +78,12 @@ define ['Phaser', "jquery"], (Phaser, $)->
       @_SAS_row = 0
 
     setPosition: (row,col, border=0)=>
-      console.log(border)
       @setRow(row)
       @setCol(col)
       bounds = @getBounds()
       @y = row * (bounds.height + border)
       @x = col * (bounds.width + border)
+
       #super(x,y)
 
     setRow: (row)=>
