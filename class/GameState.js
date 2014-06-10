@@ -206,6 +206,7 @@ exports.GameState = function () {
 
     this.setSliderSocket = function(inSocket) {
         sliderSocket = inSocket;
+        this.currentPlayer = inSocket.name;
     }
 
     return this;
