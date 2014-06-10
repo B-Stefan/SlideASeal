@@ -38,8 +38,9 @@ var GameSession = require('./class/GameSession');
         app.use(express.errorHandler());
     }
 
-    app.get("/:sessionid", routes.index);
-    app.get("/", routes.index);
+    app.get("/session/:sessionid/:registername", routes.index);
+    //app.get("/:sessionid", routes.index);
+    //app.get("/", routes.index);
 
     var GameSessions = [];
 
@@ -53,8 +54,8 @@ var GameSession = require('./class/GameSession');
 
         // register players
         socket.on("register", function (data) {
-            console.log("register Player with Name: " + data.name);
-            socket.name = data.name;
+            console.log("register Player with Name: " + data.registername);
+            socket.name = data.registername;
             socket.score = 0;
 
             var session = GameSession.findGameSession(GameSessions, data.sessionid);

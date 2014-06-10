@@ -6,13 +6,11 @@ define(['Phaser', 'jquery', './Panel', 'network', '_', 'app/Gamefield'],function
 
     var shipStripe;
     var game = new Phaser.Game(800, 600, Phaser.AUTO, 'gamefield', { preload: preload, create: create, update: update}, true);
-    var name = "Peter";
 
     var gamefield;
 
-    var sessionid = $("#sessionid").text();         // in the future parsed from the dom 
-
-
+    var registername = $("#registername").text(); 
+    var sessionid = $("#sessionid").text();
 
    function preload() {
         game.load.image('ship','../Images/Schiff.svg');
@@ -23,7 +21,7 @@ define(['Phaser', 'jquery', './Panel', 'network', '_', 'app/Gamefield'],function
         network.addNewGameStateEventListener(handelGameState);  // is called when a new GameState arrives
         network.addScoreEventListener(handelScore);             // is called when new Score information are available
         network.addDisconnectEventListener(handelDisconnect);   // is called when a disconnect happend
-        network.register(name, sessionid);                      // register the client at the server and join a session
+        network.register(registername, sessionid);                      // register the client at the server and join a session
 
         Panel.loadAllTypes(game)
         game.load.spritesheet('Robbe', '../Images/Robbe.png', 520, 520, 17);

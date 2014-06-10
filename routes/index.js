@@ -1,7 +1,8 @@
 exports.index = function(req, res) {
 
 	var options = {
-		sessionid: req.params.sessionid 
+		sessionid: req.params.sessionid,
+		registername: req.params.registername
 	}
 	res.render('test', options);
 } 

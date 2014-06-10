@@ -4,7 +4,7 @@ define(['_'], function () {
     var ScoreFunction;
     var DisconnectFunction;
 
-    var name;
+    var registername;
     var sessionid;
 
     socket = io.connect();
@@ -14,9 +14,9 @@ define(['_'], function () {
     // Request
     register = function(inName, inSessionId) {
         console.log("SEND: register with name: " + inName + ", sessionid: " + inSessionId );
-        socket.emit('register', { name: inName, sessionid: inSessionId });
+        socket.emit('register', { registername: inName, sessionid: inSessionId });
 
-        name = inName;
+        registername = inName;
         sessionid  = inSessionId;
     }
 
