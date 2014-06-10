@@ -15,6 +15,7 @@ This event is broadcast to the clients and contains various game information of 
 {
   "count": 2,
   "nextPanels": [ 3, 2, 1],
+  "currentPlayer": "Stefan",
   "actions": [
     {
       "type": "Slide",

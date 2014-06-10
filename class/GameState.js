@@ -195,7 +195,7 @@ exports.GameState = function () {
             // update nextPanel
             this.nextPanels = _.last(this.nextPanels, 2);
             this.nextPanels.push(getRandom(1,7));
-
+            this.currentPlayer = sliderSocket.name;
             this.field = field.getField();  // Copy current Field
             this.actions = actions;         // Copy current Actions
             this.count++;
