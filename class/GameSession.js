@@ -17,7 +17,7 @@ exports.GameSession = function (inSocket, inSessionId) {
     var id        = inSessionId;
     var started   = false;
 
-    // Public Property
+    broadcast("notification", {msg: "wait for a other player"});
 
     // Private Methode
     function broadcast(inType, inData) {
@@ -97,12 +97,31 @@ exports.GameSession = function (inSocket, inSessionId) {
         return state;
     }
 
-    this.joinAsPlayer = function(inSocket2) {
-        socket2 =  inSocket2;
-        return this;
+    this.joinAsPlayer = function(inSocket) {
+        broadcast("notification", {msg: "a player join the game", name: inSocket.name});
+
+        if (socket1 == null) {
+            socket1 = inSocket;
+        } else {
+            socket2 = inSocket;
+        }
+
+        state.setSliderSocket(inSocket);
+    }
+
+    this.disconnect = function(inSocket) {
+        if (inSocket == socket1) {
+            broadcast("notification", {msg: "a player leave the game", name: inSocket.name});
+            socket1 = null;
+        } else if(inSocket == socket2) {
+            broadcast("notification", {msg: "a player leave the game", name: inSocket.name});
+            socket2 = null;
+        }  
     }
 
     this.joinAsObserver = function(inSocketObserver) {
+        broadcast("notification", {msg: "a observer join the game", name: inSocketObserver.name});
+
         observers.push(inSocketObserver);
         return this;
     }

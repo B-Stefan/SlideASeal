@@ -49,6 +49,9 @@ var GameSession = require('./class/GameSession');
 
         // handle disconnects
         socket.on("disconnect", function () {
+            var session = GameSession.findGameSession(GameSessions, socket.sessionid);
+
+            session.disconnect(socket);
             console.log("disconnect " + socket.name);
         });
 

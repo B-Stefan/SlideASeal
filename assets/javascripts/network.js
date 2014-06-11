@@ -3,6 +3,7 @@ define(['_'], function () {
     var NewGameStateFunction;
     var ScoreFunction;
     var SlidePostionFunction;
+    var NotificationFunction;
     var DisconnectFunction;
 
     var registername;
@@ -52,6 +53,11 @@ define(['_'], function () {
         SlidePostionFunction(data);
     });
 
+    socket.on('notification', function(data) {
+        console.log("RECEIVE: Notification");
+        NotificationFunction(data);
+    });
+
     socket.on('disconnect', function(data) {
         console.log("RECEIVE: disconnect and try to register after 4s again");
         setTimeout(function() {
@@ -80,6 +86,10 @@ define(['_'], function () {
         DisconnectFunction = inFunction;
     }
 
+    addNotificationEventListener = function(inFunction) {
+        NotificationFunction = inFunction;
+    }
+
     return {
         socket: socket,
         register: register,
@@ -89,6 +99,7 @@ define(['_'], function () {
         addNewGameStateEventListener: addNewGameStateEventListener,
         addScoreEventListener: addScoreEventListener,
         addSlidePostionEventListener: addSlidePostionEventListener,
+        addNotificationEventListener: addNotificationEventListener,
         addDisconnectEventListener: addDisconnectEventListener
     };
 

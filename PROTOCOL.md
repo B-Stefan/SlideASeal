@@ -65,6 +65,17 @@ This event is send to the client to signal the current slider move the panel on 
 }
 ```
 
+### notification Event ###
+This event is send to the client to notification about game events.
+
+```
+{ "msg": "wait for a other player" }
+{ "msg": "not your turn" }
+{ "msg": "a player join the game", "name": "Peter" }
+{ "msg": "a observer join the game", "name": "Frank" }
+```
+
+
 ## Client to Server ##
 
 ### register Event ###

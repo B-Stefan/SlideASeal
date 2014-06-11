@@ -53,6 +53,7 @@ define(['Phaser', 'jquery', './Panel', 'network', '_', 'app/Gamefield', './Playe
         network.addNewGameStateEventListener(handelGameState);      // is called when a new GameState arrives
         network.addScoreEventListener(handelScore);                 // is called when new Score information are available
         network.addSlidePostionEventListener(handelSlidePostion);   // is called when the current slider move the current panel
+        network.addNotificationEventListener(handelNotification);   // is called when a notification happend
         network.addDisconnectEventListener(handelDisconnect);       // is called when a disconnect happend
         network.register(registername, sessionid);                  // register the client at the server and join a session
 
@@ -152,6 +153,12 @@ define(['Phaser', 'jquery', './Panel', 'network', '_', 'app/Gamefield', './Playe
         console.log('!!! SlidePostion !!!');
         console.log("m: " + data.m + ", n:" + data.n);
         //console.log(data);
+    }
+
+    // handel Notification
+    function handelNotification(data){
+        console.log('!!! Notification !!!');
+        console.log(data);
     }
 
     // handel Disconnect

@@ -201,6 +201,7 @@ exports.GameState = function () {
             this.count++;
         } else {
             console.log("not Player " + inSocket.name + " turn!");
+            inSocket.emit("notification", {msg: "not your turn"});
         }
     }
 
