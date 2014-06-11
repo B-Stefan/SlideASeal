@@ -21,7 +21,9 @@ exports.GameSession = function (inSocket, inSessionId) {
 
     // Private Methode
     function broadcast(inType, inData) {
-        socket1.emit(inType, inData);
+        if (socket1 != null) {
+            socket1.emit(inType, inData);
+        }
 
         if (socket2 != null) {
             socket2.emit(inType, inData);
