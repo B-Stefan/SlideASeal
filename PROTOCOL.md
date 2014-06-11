@@ -55,6 +55,16 @@ This event is broadcast to the clients and contains various game information of 
 }
 ```
 
+### slidePostion Event ###
+This event is send to the client to signal the current slider move the panel on the gamefield.
+
+```
+{
+	"m": "1",
+	"n": "0"
+}
+```
+
 ## Client to Server ##
 
 ### register Event ###
@@ -70,6 +80,16 @@ Example: localhost:3000/session/hallowelt123/Stefan
 ```
 ### slide Event ###
 This event is send to the server to signal the client slide a panel.
+
+```
+{
+	"m": "1",
+	"n": "0"
+}
+```
+
+### slidePostion Event ###
+This event is send to the server to signal the current slider move the panel on the gamefield. Only the current slider can send this event to the server.
 
 ```
 {

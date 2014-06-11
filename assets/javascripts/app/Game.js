@@ -49,11 +49,12 @@ define(['Phaser', 'jquery', './Panel', 'network', '_', 'app/Gamefield', './Playe
         window.test = gamefield
         setTimeout(gamefield.testFunction,1000)
 
-        network.addGameStartEventListener(handelGameStart);     // is called when the game starts
-        network.addNewGameStateEventListener(handelGameState);  // is called when a new GameState arrives
-        network.addScoreEventListener(handelScore);             // is called when new Score information are available
-        network.addDisconnectEventListener(handelDisconnect);   // is called when a disconnect happend
-        network.register(registername, sessionid);                      // register the client at the server and join a session
+        network.addGameStartEventListener(handelGameStart);         // is called when the game starts
+        network.addNewGameStateEventListener(handelGameState);      // is called when a new GameState arrives
+        network.addScoreEventListener(handelScore);                 // is called when new Score information are available
+        network.addSlidePostionEventListener(handelSlidePostion);   // is called when the current slider move the current panel
+        network.addDisconnectEventListener(handelDisconnect);       // is called when a disconnect happend
+        network.register(registername, sessionid);                  // register the client at the server and join a session
 
         //test = gamefield.children[0].getBackgroundSprite()
         //test2 = gamefield.children[1].getBackgroundSprite()
@@ -90,11 +91,16 @@ define(['Phaser', 'jquery', './Panel', 'network', '_', 'app/Gamefield', './Playe
     }
 
 
-
     // handel Slide
     handelSlide = function (m, n) {
         // Handle Click and than call this function.
         network.slide(m, n);
+    }
+
+    // handel SlidePostion
+    handelSlide = function (m, n) {
+        // Handle Hover and than call this function.
+        network.sendSlidePostion(m, n);
     }
 
     // handel GameStart
@@ -138,6 +144,13 @@ define(['Phaser', 'jquery', './Panel', 'network', '_', 'app/Gamefield', './Playe
         console.log('!!! Score !!!');
         console.log("you score is: " + data.you.score);
         console.log("rival score is: " + data.rival.score);
+        //console.log(data);
+    }
+
+    // handel SlidePostion
+    function handelSlidePostion(data){
+        console.log('!!! SlidePostion !!!');
+        console.log("m: " + data.m + ", n:" + data.n);
         //console.log(data);
     }
 

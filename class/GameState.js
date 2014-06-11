@@ -209,5 +209,13 @@ exports.GameState = function () {
         this.currentPlayer = inSocket.name;
     }
 
+    this.checkSliderSocketById = function(inSocketId){
+        if(sliderSocket.id == inSocketId) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     return this;
 }

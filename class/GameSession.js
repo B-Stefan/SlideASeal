@@ -116,6 +116,10 @@ exports.GameSession = function (inSocket, inSessionId) {
         broadcast("GameStart", state);
     }
 
+    this.sendSlidePostion = function (data) {
+        broadcast("slidePostion", data);
+    }
+
     this.isFull = function () {
         if(socket1 != null && socket2 != null) {
             return true; 
