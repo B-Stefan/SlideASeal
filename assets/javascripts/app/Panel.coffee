@@ -46,14 +46,12 @@ define ['Phaser', "jquery"], (Phaser, $)->
     # @enum
     @types  = {
       ANCHOR:   new PanelType('ANCHOR',1)
-      WHEEL:    new PanelType('ANCHOR',2)
-      LIFEBELT: new PanelType('ANCHOR',3)
-      FISH_REST:new PanelType('FISH',4)
+      WHEEL:    new PanelType('WHEEL',2)
+      LIFEBELT: new PanelType('LIFEBELT',3)
+      FISH_REST:new PanelType('FISH_REST',4)
       BALL:     new PanelType('BALL',5)
-      FISH:     new PanelType('BALL',6)
-      BARREL:   new PanelType('BALL',7)
-
-
+      FISH:     new PanelType('FISH',6)
+      BARREL:   new PanelType('BARREL',7)
     }
 
     @loadAllTypes: (game)->
@@ -61,7 +59,7 @@ define ['Phaser', "jquery"], (Phaser, $)->
       for key,type of Panel.types
         game.load.image(type.getName(), type.getImageUrl())
 
-      game.load.image("Panel_Background", PanelType.baseUrl + "Allubox.png")
+      game.load.image("Panel_Background", PanelType.baseUrl + "ALLUBOX.png")
 
 
     constructor : (game,parent, type) ->
