@@ -57,22 +57,21 @@ var GameSession = require('./class/GameSession');
 
         // register players
         socket.on("register", function (data) {
-            console.log("register Player with Name: " + data.registername);
             socket.name = data.registername;
             socket.score = 0;
 
             var session = GameSession.findGameSession(GameSessions, data.sessionid);
-            
+
+            console.log("register Player with Name: " + data.registername);
+
             if(session != undefined && !(session.isFull())) {
                 // join session
                 session.joinAsPlayer(socket);
-                console.log("join Session as Player - ID: " + session.getSessionId());
                 socket.sessionid = session.getSessionId();
 
-                session.startSession();
+                session.startSession(socket);
             } else if(session != undefined && session.isFull()) {
                 // join session as observer
-                console.log("join Session as Observer - ID: " + session.getSessionId());
                 session.joinAsObserver(socket);
                 socket.sessionid = session.getSessionId();
 
@@ -80,7 +79,6 @@ var GameSession = require('./class/GameSession');
             } else {
                 // create session
                 session = new GameSession.GameSession(socket, data.sessionid);
-                console.log("open Session as Player - ID: " + session.getSessionId());
                 socket.sessionid = session.getSessionId();
 
                 GameSessions.push(session);
@@ -90,10 +88,14 @@ var GameSession = require('./class/GameSession');
 
         socket.on("slide", function(data) {
             var session = GameSession.findGameSession(GameSessions, socket.sessionid);
-
-            if(session.getGameState().isStarted()) {                
+            
+            if(session.getGameState().isStarted() && session.getGameState().checkSliderSocketById(socket.id)) {
+                console.log("[" + session.getSessionId() + "] Player slide at m: " + data.m + ", n: " + data.n + " - Name: " + socket.name);
                 session.getGameState().update(socket, session, data.m, data.n);
                 session.sendGameState();
+            } else {
+                console.log("[" + session.getSessionId() + "] No Turn - Player want to slide at m: " + data.m + ", n: " + data.n + " - Name: " + socket.name);
+                socket.emit("notification", {msg: "not your turn"});
             }
         });
 
