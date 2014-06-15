@@ -43,7 +43,8 @@ define ['Phaser', './Panel', 'network', './Player'], (Phaser,Panel, network,Play
         colIndex = 0
         for panelTypeId in  row
           panelType = Panel.getTypeById(panelTypeId)
-          @add(new Panel(@game,@,panelType),rowIndex,colIndex)
+          if panelTypeId !=0
+            @add(new Panel(@game,@,panelType),rowIndex,colIndex)
           colIndex = colIndex+1
         rowIndex=rowIndex+1
       @_SAS_size = rowIndex
@@ -351,9 +352,9 @@ define ['Phaser', './Panel', 'network', './Player'], (Phaser,Panel, network,Play
 
       #Update the psotion of the newPanel that the user can move around the gamefield
       #Only if the you on the turn
-      if @game.getCurrentPlayer() != null
-        if @game.getCurrentPlayer().getSessionId() == @getPlayer().getSessionId
-          @updatePanelToPlaceFollowMouse()
+      #if @game.getCurrentPlayer() != null
+      #  if @game.getCurrentPlayer().getSessionId() == @getPlayer().getSessionId
+      @updatePanelToPlaceFollowMouse()
 
       super();
 

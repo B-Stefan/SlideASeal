@@ -30,7 +30,6 @@ define(['Phaser', 'jquery', './Panel', 'network', '_', 'app/Gamefield', './Playe
         game.load.spritesheet('Robbe', game.normalizeUrl('/Images/Robbe.png'), 520, 520, 17);
         game.load.spritesheet('Robbe2',game.normalizeUrl('/Images/RobbeBall.png'), 520, 520, 18);
 
-
         game.load.audio("beachWithGulls",game.normalizeUrl('/sounds/beach_with_gulls.ogg'),true)
    }
     
@@ -116,13 +115,6 @@ define(['Phaser', 'jquery', './Panel', 'network', '_', 'app/Gamefield', './Playe
     function handelGameState(data){
 
 
-        if (gamefield.getSize() == 0){
-            gamefield.createGamefield(data.field)
-        }
-        if (data.actions.length > 0 ){
-            gamefield.handleNetworkActions(data.actions)
-        }
-        //@tdo set current player
         console.log('!!! New GameState !!!');
         console.log(data);
         console.log("The next Panel is: " + data.nextPanels[0]);
@@ -130,6 +122,14 @@ define(['Phaser', 'jquery', './Panel', 'network', '_', 'app/Gamefield', './Playe
             console.log("| " + data.field[i][0] + " | " + data.field[i][1] + " | " + data.field[i][2] + " | " + data.field[i][3] + " | " + data.field[i][4] + " |")
             console.log("|---|---|---|---|---|")
         }
+        if (gamefield.getSize() == 0){
+            gamefield.createGamefield(data.field)
+        }
+        if (data.actions.length > 0 ){
+            gamefield.handleNetworkActions(data.actions)
+        }
+        //@tdo set current player
+
 
     }
 
