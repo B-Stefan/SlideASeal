@@ -35,7 +35,7 @@ define(['Phaser', 'jquery', './Panel', 'network', '_', 'app/Gamefield'],function
             window.setTimeout(delayed, time);
         }
 
-        this.randomAnimatio = function(){
+        this.randomAnimation = function(){
             var random = (math.random())*10;
             robbe.destroy();
             if(random>5){
