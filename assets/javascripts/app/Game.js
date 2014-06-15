@@ -2,11 +2,12 @@
  * Created by Besitzer on 14.05.2014.
  */
 
-define(['Phaser', 'jquery', './Panel', 'network', '_', 'app/Gamefield', './Player'],function (Phaser, $, Panel, network, _,Gamefield,Player){
+define(['Phaser', 'jquery', './Panel', 'network', '_', 'app/Gamefield', 'app/Scoreboard', './Player'],function (Phaser, $, Panel, network, _, Gamefield, Scoreboard, Player){
 
     var shipStripe;
     var game = new Phaser.Game(800, 600, Phaser.AUTO, 'gamefield', { preload: preload, create: create, update: update}, true);
     var gamefield;
+    var scoreboard;
     var registername = $("#registername").text(); 
     var sessionid = $("#sessionid").text();
 
@@ -26,33 +27,41 @@ define(['Phaser', 'jquery', './Panel', 'network', '_', 'app/Gamefield', './Playe
 
    function preload() {
         Panel.loadAllTypes(game)
-        game.load.image('ship',game.normalizeUrl('/Images/Schiff.svg'));
-        game.load.spritesheet('Robbe', game.normalizeUrl('/Images/Robbe.png'), 520, 520, 17);
-        game.load.spritesheet('Robbe2',game.normalizeUrl('/Images/RobbeBall.png'), 520, 520, 18);
+        //game.load.image('ship',game.normalizeUrl('/Images/Schiff.svg'));
+        //game.load.spritesheet('Robbe', game.normalizeUrl('/Images/Robbe.png'), 520, 520, 17);
+        //game.load.spritesheet('Robbe2',game.normalizeUrl('/Images/RobbeBall.png'), 520, 520, 18);
+
 
         game.load.audio("beachWithGulls",game.normalizeUrl('/sounds/beach_with_gulls.ogg'),true)
+
+
+        //game.load.audio("beachWithGulls",game.normalizeUrl('/sounds/beach_with_gulls.ogg'),true)
+
    }
     
     function create () {
         game.physics.startSystem(Phaser.Physics.P2JS);
         shipStripe = game.add.sprite(game.world.width, -150, 'ship');
 
-        beachSound = game.sound.play("beachWithGulls",1,true)
+        //beachSound = game.sound.play("beachWithGulls",1,true)
         player = new Player(registername,sessionid)
         gamefield = new Gamefield(game,player)
+        Scoreboard.create(game);
 
-        game.sound.volume = 0
+        game.sound.volume = 0;
 
         game.physics.p2.restitution = 0.0;
         game.physics.p2.gravity.y = 300;
         window.test = gamefield
         setTimeout(gamefield.testFunction,1000)
 
-        network.addGameStartEventListener(handelGameStart);     // is called when the game starts
-        network.addNewGameStateEventListener(handelGameState);  // is called when a new GameState arrives
-        network.addScoreEventListener(handelScore);             // is called when new Score information are available
-        network.addDisconnectEventListener(handelDisconnect);   // is called when a disconnect happend
-        network.register(registername, sessionid);                      // register the client at the server and join a session
+        network.addGameStartEventListener(handelGameStart);         // is called when the game starts
+        network.addNewGameStateEventListener(handelGameState);      // is called when a new GameState arrives
+        network.addScoreEventListener(Scoreboard.updateScoreboard); // is called when new Score information are available
+        network.addSlidePostionEventListener(handelSlidePostion);   // is called when the current slider move the current panel
+        network.addNotificationEventListener(handelNotification);   // is called when a notification happend
+        network.addDisconnectEventListener(handelDisconnect);       // is called when a disconnect happend
+        network.register(registername, sessionid);                  // register the client at the server and join a session
 
         //test = gamefield.children[0].getBackgroundSprite()
         //test2 = gamefield.children[1].getBackgroundSprite()
@@ -61,9 +70,9 @@ define(['Phaser', 'jquery', './Panel', 'network', '_', 'app/Gamefield', './Playe
 
 
 
-        game.add.tween(shipStripe).to({x:-100}, 5000, Phaser.Easing.Quadratic.Out, true, 0, false);
-        game.add.tween(shipStripe.scale).to({x:1.25, y:1.25}, 5000, Phaser.Easing.Quadratic.Out, true, 0, false);
-
+        //game.add.tween(shipStripe).to({x:-100}, 5000, Phaser.Easing.Quadratic.Out, true, 0, false);
+        //game.add.tween(shipStripe.scale).to({x:1.25, y:1.25}, 5000, Phaser.Easing.Quadratic.Out, true, 0, false);
+        /*
         robbe_eins = game.add.sprite(630, 400, 'Robbe');
         robbe = game.add.sprite(600, 430, 'Robbe2');
 
@@ -74,7 +83,7 @@ define(['Phaser', 'jquery', './Panel', 'network', '_', 'app/Gamefield', './Playe
         anim_eins = robbe_eins.animations.add('walk');
         anim_eins.play( 10, true );
         anim = robbe.animations.add('walk');
-        anim.play( 13, true );
+        anim.play( 13, true );*/
     }
 
     function update(){
@@ -82,18 +91,18 @@ define(['Phaser', 'jquery', './Panel', 'network', '_', 'app/Gamefield', './Playe
         if(  game.sound.volume < 1){
             game.sound.volume =  game.sound.volume +0.0001
         }
-
-
-
-
+        
     }
 
-
-
-    // handel Slide
-    handelSlide = function (m, n) {
-        // Handle Click and than call this function.
+    // send Slide
+    sendSlide = function (m, n) {
+        // Click and than call this function.
         network.slide(m, n);
+    }
+
+    // send SlidePostion
+    sendSlidePostion = function (m, n) {
+        network.sendSlidePostion(m, n);
     }
 
     // handel GameStart
@@ -114,7 +123,6 @@ define(['Phaser', 'jquery', './Panel', 'network', '_', 'app/Gamefield', './Playe
     // handel GameState
     function handelGameState(data){
 
-
         console.log('!!! New GameState !!!');
         console.log(data);
         console.log("The next Panel is: " + data.nextPanels[0]);
@@ -133,12 +141,17 @@ define(['Phaser', 'jquery', './Panel', 'network', '_', 'app/Gamefield', './Playe
 
     }
 
-   // handel Score
-    function handelScore(data){
-        console.log('!!! Score !!!');
-        console.log("you score is: " + data.you.score);
-        console.log("rival score is: " + data.rival.score);
+    // handel SlidePostion
+    function handelSlidePostion(data){
+        console.log('!!! SlidePostion !!!');
+        console.log("m: " + data.m + ", n:" + data.n);
         //console.log(data);
+    }
+
+    // handel Notification
+    function handelNotification(data){
+        console.log('!!! Notification !!!');
+        console.log(data);
     }
 
     // handel Disconnect

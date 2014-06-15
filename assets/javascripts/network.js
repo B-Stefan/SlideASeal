@@ -2,6 +2,8 @@ define(['_'], function () {
     var GameStartFunction;
     var NewGameStateFunction;
     var ScoreFunction;
+    var SlidePostionFunction;
+    var NotificationFunction;
     var DisconnectFunction;
 
     var registername;
@@ -25,6 +27,11 @@ define(['_'], function () {
         socket.emit('slide', { m: m, n: n });
     }
 
+    sendSlidePostion = function(m, n) {
+        console.log("SEND: slidePostion with m: " + m + ", n: " + n );
+        socket.emit('slidePostion', { m: m, n: n });
+    }
+
     // Response
     socket.on('GameStart', function(data) {
         console.log("RECEIVE: GameStart");
@@ -39,6 +46,16 @@ define(['_'], function () {
     socket.on('Score', function(data) {
         console.log("RECEIVE: Score");
         ScoreFunction(data);
+    });
+
+    socket.on('slidePostion', function(data) {
+        console.log("RECEIVE: slidePostion");
+        SlidePostionFunction(data);
+    });
+
+    socket.on('notification', function(data) {
+        console.log("RECEIVE: Notification");
+        NotificationFunction(data);
     });
 
     socket.on('disconnect', function(data) {
@@ -61,17 +78,28 @@ define(['_'], function () {
         ScoreFunction = inFunction;
     }
 
+    addSlidePostionEventListener = function(inFunction) {
+        SlidePostionFunction = inFunction;
+    }
+
     addDisconnectEventListener = function(inFunction) {
         DisconnectFunction = inFunction;
+    }
+
+    addNotificationEventListener = function(inFunction) {
+        NotificationFunction = inFunction;
     }
 
     return {
         socket: socket,
         register: register,
         slide: slide,
+        sendSlidePostion: sendSlidePostion,
         addGameStartEventListener: addGameStartEventListener,
         addNewGameStateEventListener: addNewGameStateEventListener,
         addScoreEventListener: addScoreEventListener,
+        addSlidePostionEventListener: addSlidePostionEventListener,
+        addNotificationEventListener: addNotificationEventListener,
         addDisconnectEventListener: addDisconnectEventListener
     };
 

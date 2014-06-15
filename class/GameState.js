@@ -63,7 +63,7 @@ exports.GameState = function () {
                         }
                     }
 
-                    console.log("horizontal score found");
+                    //console.log("horizontal score found");
                     return new Action.Action("Score", data);
                 }
 
@@ -88,13 +88,13 @@ exports.GameState = function () {
                         }
                     }
 
-                    console.log("vertical score found");
+                    //console.log("vertical score found");
                     return new Action.Action("Score", data);
                 }
             }
         }
 
-        console.log("no score found");
+        //console.log("no score found");
         return undefined;
     }
 
@@ -150,7 +150,7 @@ exports.GameState = function () {
     
     function addAction(inAction) {
         actions.push(inAction) ;
-        console.log("action added from type: " + inAction.type);
+        //console.log("action added from type: " + inAction.type);
     }
 
     this.startGame = function() {
@@ -164,49 +164,50 @@ exports.GameState = function () {
     // Public Methode
     this.update = function(inSocket, inSession, inM, inN) {
 
-        if(inSocket == sliderSocket) {
-            console.log("Player " + inSocket.name + " slided at " + inM + ", " + inN);
+        actions = [];
 
-            actions = [];
+        var nextPanel = this.nextPanels[0];
+        addAction( field.slidePanelIn(inM, inN, nextPanel));
 
-            var nextPanel = this.nextPanels[0];
-            addAction( field.slidePanelIn(inM, inN, nextPanel));
+        var loop = true;
 
-            var loop = true;
-
-            while(true) {
-                var scoreaction = score();
-                if (scoreaction == undefined) {
-                    break;
-                }
-                    
-                addAction(scoreaction);
+        while(true) {
+            var scoreaction = score();
+            if (scoreaction == undefined) {
+                break;
             }
-
-            // Switch the current Player, if no score happend
-            if(actions.length == 1) {
-                var nextSliderSocket = inSession.getOtherSocket(inSocket);
-                console.log("now its " + nextSliderSocket.name + "turn!")
-
-                this.setSliderSocket( nextSliderSocket);
-            }
-
-
-            // update nextPanel
-            this.nextPanels = _.last(this.nextPanels, 2);
-            this.nextPanels.push(getRandom(1,7));
-            this.currentPlayer = sliderSocket.name;
-            this.field = field.getField();  // Copy current Field
-            this.actions = actions;         // Copy current Actions
-            this.count++;
-        } else {
-            console.log("not Player " + inSocket.name + " turn!");
+                
+            addAction(scoreaction);
         }
+
+        // Switch the current Player, if no score happend
+        if(actions.length == 1) {
+            var nextSliderSocket = inSession.getOtherSocket(inSocket);
+            console.log("now its " + nextSliderSocket.name + "turn!")
+
+            this.setSliderSocket(nextSliderSocket);
+        }
+
+        // update nextPanel
+        this.nextPanels = _.last(this.nextPanels, 2);
+        this.nextPanels.push(getRandom(1,7));
+        this.currentPlayer = sliderSocket.name;
+        this.field = field.getField();  // Copy current Field
+        this.actions = actions;         // Copy current Actions
+        this.count++;
     }
 
     this.setSliderSocket = function(inSocket) {
         sliderSocket = inSocket;
         this.currentPlayer = inSocket.name;
+    }
+
+    this.checkSliderSocketById = function(inSocketId){
+        if(sliderSocket.id == inSocketId) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     return this;
