@@ -16,7 +16,7 @@ define ['Phaser', './Panel'], (Phaser,Panel)->
       super(panel)
 
     popNextPanel: =>
-      nextPanel = @children.reverse()[0]
+      nextPanel = @children[0]
       @remove(nextPanel)
       return nextPanel
     handleNetworkGameState: (data)=>
