@@ -15,6 +15,11 @@ define ['Phaser', "jquery"], (Phaser, $)->
 
 
     # @static
+    # Default border between 2 Panels on the Gamefield and UpcomingPanelBoad
+    @getDefaultPanelBorder: ()-> 10
+
+
+    # @static
     # @enum
     @moveDirections = {
       LEFT: 10
@@ -91,7 +96,7 @@ define ['Phaser', "jquery"], (Phaser, $)->
       @_SAS_col = -1
       @_SAS_row = -1
 
-    setPosition: (row,col, border=0)=>
+    setPosition: (row,col, border=Panel.getDefaultPanelBorder())=>
       @setRow(row)
       @setCol(col)
       bounds = @getBounds()
