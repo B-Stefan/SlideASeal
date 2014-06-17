@@ -52,8 +52,8 @@ exports.Field = function () {
         });
 
         data = {
-            SlideIn:  { type: inPanel, m: line, n:1, orientation: "horizontal" },
-            SlideOut: { m: line, n:5 }
+            SlideIn:  { type: inPanel, m: m, n:1, orientation: "horizontal" },
+            SlideOut: { m: m, n:5 }
         }
 
         return new Action.Action("Slide", data);
@@ -73,8 +73,8 @@ exports.Field = function () {
         }
 
         data = {
-            SlideIn:  { type: inPanel, m: 1, n: line, orientation: "vertical"},
-            SlideOut: { m: 5, n:line}
+            SlideIn:  { type: inPanel, m: 1, n: n, orientation: "vertical"},
+            SlideOut: { m: 5, n:n}
         }
 
         return new Action.Action("Slide", data);
@@ -86,8 +86,8 @@ exports.Field = function () {
         field[line].push(inPanel);
 
         data = {
-            SlideIn:  { type: inPanel, m: line, n:5, orientation: "horizontal" },
-            SlideOut: { m: line, n:1 }
+            SlideIn:  { type: inPanel, m: m, n:5, orientation: "horizontal" },
+            SlideOut: { m: m, n:1 }
         }
 
         return new Action.Action("Slide", data);

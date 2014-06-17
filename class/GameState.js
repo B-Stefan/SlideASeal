@@ -13,7 +13,6 @@ var Field     = require("./Field"),
 exports.GameState = function () {
 	/** @access private */
     var field           = new Field.Field();    // Field Object
-    var actions         = [];                   
     var sliderSocket    = undefined;            // this socket can 
     var started         = false;
 
@@ -63,7 +62,7 @@ exports.GameState = function () {
                         }
                     }
 
-                    //console.log("horizontal score found");
+                    console.log("horizontal score found");
                     return new Action.Action("Score", data);
                 }
 
@@ -88,13 +87,13 @@ exports.GameState = function () {
                         }
                     }
 
-                    //console.log("vertical score found");
+                    console.log("vertical score found");
                     return new Action.Action("Score", data);
                 }
             }
         }
 
-        //console.log("no score found");
+        console.log("no score found");
         return undefined;
     }
 
@@ -148,11 +147,6 @@ exports.GameState = function () {
         return value * multiplier;
     }
     
-    function addAction(inAction) {
-        actions.push(inAction) ;
-        //console.log("action added from type: " + inAction.type);
-    }
-
     this.startGame = function() {
         started = true;
     }
@@ -164,24 +158,24 @@ exports.GameState = function () {
     // Public Methode
     this.update = function(inSocket, inSession, inM, inN) {
 
-        actions = [];
+        actions1 = [];
 
         var nextPanel = this.nextPanels[0];
-        addAction( field.slidePanelIn(inM, inN, nextPanel));
+
+        var slideaction = field.slidePanelIn(inM, inN, nextPanel);
+        actions1.push(slideaction);
 
         var loop = true;
-
         while(true) {
             var scoreaction = score();
             if (scoreaction == undefined) {
                 break;
             }
-                
-            addAction(scoreaction);
+            actions1.push(scoreaction);
         }
 
         // Switch the current Player, if no score happend
-        if(actions.length == 1) {
+        if(actions1.length == 1) {
             var nextSliderSocket = inSession.getOtherSocket(inSocket);
             console.log("now its " + nextSliderSocket.name + "turn!")
 
@@ -193,7 +187,7 @@ exports.GameState = function () {
         this.nextPanels.push(getRandom(1,7));
         this.currentPlayer = sliderSocket.name;
         this.field = field.getField();  // Copy current Field
-        this.actions = actions;         // Copy current Actions
+        this.actions = actions1;         // Copy current Actions
         this.count++;
     }
 
