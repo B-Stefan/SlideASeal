@@ -18,6 +18,10 @@ function (Phaser, $, Panel, network, _, Gamefield, Scoreboard, Player,UpcomingPa
     var gamefield;
     var scoreboard;
     var upcomingPanelBoad
+    var sealBoard
+
+
+    //Get Vars from server
     var registername = $("#registername").text(); 
     var sessionid = $("#sessionid").text();
 
@@ -53,9 +57,13 @@ function (Phaser, $, Panel, network, _, Gamefield, Scoreboard, Player,UpcomingPa
         game.physics.startSystem(Phaser.Physics.P2JS);
         shipStripe = game.add.sprite(game.world.width, -150, 'ship');
         //beachSound = game.sound.play("beachWithGulls",1,true)
-        player = new Player(registername,registername)
-        gamefield = new Gamefield(game,player)
+
+
+        you = new Player(registername,registername)
+        gamefield = new Gamefield(game,you)
         upcomingPanelBoad = new UpcomingPanelsBoard(game,gamefield)
+        sealBoard = new SealBoard(game,you)
+
         Scoreboard.create(game);
 
         game.sound.volume = 0;
@@ -68,6 +76,7 @@ function (Phaser, $, Panel, network, _, Gamefield, Scoreboard, Player,UpcomingPa
         network.addGameStartEventListener(handelGameStart);         // is called when the game starts
         network.addNewGameStateEventListener(handelGameState);      // is called when a new GameState arrives
         network.addScoreEventListener(Scoreboard.updateScoreboard); // is called when new Score information are available
+        network.addScoreEventListener(sealBoard.handleNetworkScoreAction); // is called when new Score information are available
         network.addSlidePostionEventListener(handelSlidePostion);   // is called when the current slider move the current panel
         network.addNotificationEventListener(handelNotification);   // is called when a notification happend
         network.addDisconnectEventListener(handelDisconnect);       // is called when a disconnect happend
@@ -119,6 +128,7 @@ function (Phaser, $, Panel, network, _, Gamefield, Scoreboard, Player,UpcomingPa
     function handelGameState(data){
         console.log('!!! New GameState !!!');
         console.log(data);
+        console.log(data.actions[0])
         console.log("The next Panel is: " + data.nextPanels[0]);
         for(var i = 0; i < 5; i++) {
             console.log("| " + data.field[i][0] + " | " + data.field[i][1] + " | " + data.field[i][2] + " | " + data.field[i][3] + " | " + data.field[i][4] + " |")
