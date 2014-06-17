@@ -442,11 +442,7 @@ define ['Phaser', './Panel', 'network', './Player'], (Phaser,Panel, network,Play
     #@param {Action} action - The action to handle
     #@return {Phaser.Tween | null} The tween object or null if no tween created
     handleNetworkAction: (action)=>
-
-      if action != null
-          console.log("handleNetworkAction=> action is null")
-          return null
-      else if action.type == "Slide"
+     if action.type == "Slide"
         if action.data.SlideIn
           trans =@translateFromNetworkRowCol(action.data.SlideIn.m,action.data.SlideIn.n,action.data.SlideIn.orientation)
           tween = @slideNewPanelIn(trans.row,trans.col,@getPanelToPlace(),trans.position)
