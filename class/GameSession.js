@@ -15,7 +15,6 @@ exports.GameSession = function (inSocket, inSessionId) {
     var observers = []; // an Array of Sockets for Obersvers
     var state     = new GameState.GameState();
     var id        = inSessionId;
-    var started   = false;
 
     console.log("[" + id + "] open Session as Player - Name: " + inSocket.name);
     broadcast("notification", {msg: "you open a session", name: inSocket.name, side: "left"});

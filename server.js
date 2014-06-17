@@ -19,7 +19,7 @@ var GameSession = require('./class/GameSession');
     var server = require('http').createServer(app);
     var io = sio.listen(server);
 
-    app.set("port", process.env.PORT || 3000);
+    app.set("port", process.env.PORT || 3333);
     app.set("views", __dirname + "/views");
     app.engine("handlebars", exphbs({defaultLayout: "main"}));
     app.set("view engine", "handlebars");
@@ -69,7 +69,11 @@ var GameSession = require('./class/GameSession');
                 session.joinAsPlayer(socket);
                 socket.sessionid = session.getSessionId();
 
-                session.startSession(socket);
+                if(session.getGameState().isStarted()) {
+                    session.sendGameState();
+                } else {
+                    session.startSession(socket);
+                }
             } else if(session != undefined && session.isFull()) {
                 // join session as observer
                 session.joinAsObserver(socket);
