@@ -11,8 +11,10 @@ var Action = require("./Action.js"),
  */
 exports.Field = function () {
     /** @access private */
-    //var field = generateTestField();
-    var field = generateRandomField();
+    var field = generateTestField();
+    //var field = generateRandomField();
+
+    purgeSpaces();
 
     // Private Methode
     function getRandom(min, max) {
@@ -31,11 +33,11 @@ exports.Field = function () {
     function generateTestField() {
         var newfield = [];
         
-        newfield.push([1, 2, 3, 4, 2]);
-        newfield.push([4, 2, 2, 2, 2]);
-        newfield.push([1, 4, 6, 4, 4]);
-        newfield.push([2, 3, 6, 4, 2]);
-        newfield.push([2, 3, 3, 4, 2]);
+        newfield.push([0, 0, 3, 4, 2]);
+        newfield.push([0, 2, 1, 2, 2]);
+        newfield.push([0, 0, 6, 1, 4]);
+        newfield.push([0, 3, 6, 4, 1]);
+        newfield.push([0, 7, 3, 4, 2]);
 
         return newfield;
     }
@@ -51,7 +53,7 @@ exports.Field = function () {
              field[line].push(obj);
         });
 
-        data = {
+        var data = {
             SlideIn:  { type: inPanel, m: m, n:1, orientation: "horizontal" },
             SlideOut: { m: m, n:5 }
         }
@@ -62,19 +64,39 @@ exports.Field = function () {
     function slideVerticalInTop(n, inPanel) {
         var line = n - 1;
 
-        var input = inPanel;
+        var columnArray = getColumn(line);
 
-        var newline = [ ]
+        console.log(columnArray);
+        var newColumnArray = [];
 
-        for(var i=0; i<5; i++) {
-            newline.push(field[i][line]);
-            field[i][line] = input;
-            input = newline[i];
-        }
+        var data;
 
-        data = {
-            SlideIn:  { type: inPanel, m: 1, n: n, orientation: "vertical"},
-            SlideOut: { m: 5, n:n}
+        if(countZerosInArray(columnArray) == 0) {
+            // Distory last element, because not enough space for 4
+            newColumnArray.push(inPanel);
+            for(var i=0; i<4; i++) {
+                newColumnArray.push(columnArray[i]);
+            }
+            setColumn(line, newColumnArray);
+
+            data = {
+                SlideIn:  { type: inPanel, m: 1, n: n, orientation: "vertical"},
+                SlideOut: { m: 5, n:n}
+            }
+        } else {
+            // add element on top
+            purgeColumn(line);
+            newColumnArray.push(inPanel);
+            for(var i=1; i<5; i++) {
+                newColumnArray.push(columnArray[i]);
+            }
+
+            setColumn(line, newColumnArray);
+            purgeColumn(line);
+
+            data = {
+                SlideIn:  { type: inPanel, m: 1, n: n, orientation: "vertical"},
+            }
         }
 
         return new Action.Action("Slide", data);
@@ -85,7 +107,7 @@ exports.Field = function () {
         field[line] = _.last(field[line], 4)
         field[line].push(inPanel);
 
-        data = {
+        var data = {
             SlideIn:  { type: inPanel, m: m, n:5, orientation: "horizontal" },
             SlideOut: { m: m, n:1 }
         }
@@ -98,7 +120,7 @@ exports.Field = function () {
         var newColumnArray = [];
         var columnArray = getColumn(inColumn);   
 
-        var save =0;
+        var save = 0;
         for(var i = 0; i<5; i++) {
 
             if(columnArray[i] != 0){
@@ -155,14 +177,33 @@ exports.Field = function () {
         return row;
     }
 
+    function countZerosInArray(inArray) {
+        var count = 0;
+        for (var i=0; i < 5; i++) {
+            if (inArray[i] == 0) {
+                count++;
+            }
+        }
+
+        return count;
+    }
+
     // Public Methode   
     this.slidePanelIn = function (m, n, newPanel) {
+        var slideaction;
+
         if(n == 0) {
-            return slideHorizontalInLeft(m, newPanel);
+            slideaction = slideHorizontalInLeft(m, newPanel); 
+            purgeSpaces();
+            return slideaction;
         } else if (m == 0) {
-            return slideVerticalInTop(n, newPanel);
+            slideaction = slideVerticalInTop(n, newPanel)
+            purgeSpaces();
+            return slideaction;
         } else if (n == 6) {
-            return slideHorizontalInRight(m, newPanel);
+            slideaction = slideHorizontalInRight(m, newPanel)
+            purgeSpaces();
+            return slideaction;
         }
     }
 

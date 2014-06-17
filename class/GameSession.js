@@ -33,6 +33,8 @@ exports.GameSession = function (inSocket, inSessionId) {
         _.each(observers, function(socket) {
             socket.emit(inType, inData);
         });
+
+        state.resetActions();
     }
 
     function sendScore() {

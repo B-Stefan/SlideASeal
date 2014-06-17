@@ -204,5 +204,9 @@ exports.GameState = function () {
         }
     }
 
+    this.resetActions = function() {
+        this.actions = [];
+    }
+
     return this;
 }
