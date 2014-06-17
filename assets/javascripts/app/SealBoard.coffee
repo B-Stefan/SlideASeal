@@ -1,4 +1,6 @@
-define ['Phaser', './Seal'], (Phaser,Seal)->
+define ['Phaser',
+        './Seal',
+        './Player'], (Phaser,Seal,Player)->
   class SealBoard extends Phaser.Group
 
     
@@ -22,6 +24,9 @@ define ['Phaser', './Seal'], (Phaser,Seal)->
 
 
 
+    setPosition: (side)=>
+      if not side of Player.sides
+        throw  new Error ("Please parse a side enum type")
 
 
     createSeal: ()=>
@@ -41,4 +46,5 @@ define ['Phaser', './Seal'], (Phaser,Seal)->
 
     #Handle the network score action
     handleNetworkScoreAction: (scoreData)=>
+      console.log(scoreData)
 
