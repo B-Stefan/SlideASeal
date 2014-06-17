@@ -9,9 +9,9 @@ define(['Phaser',
     './Gamefield',
     './Scoreboard',
     './Player',
-    './UpcommingPanelsBoard',
+    './UpcomingPanelsBoard',
     './SealBoard'],
-function (Phaser, $, Panel, network, _, Gamefield, Scoreboard, Player,UpcommingPanelsBoard,SealBoard){
+function (Phaser, $, Panel, network, _, Gamefield, Scoreboard, Player,UpcomingPanelsBoard,SealBoard){
 
     var shipStripe;
     var game = new Phaser.Game(800, 600, Phaser.AUTO, 'gamefield', { preload: preload, create: create, update: update}, true);
@@ -38,7 +38,7 @@ function (Phaser, $, Panel, network, _, Gamefield, Scoreboard, Player,UpcommingP
    function preload() {
         Panel.loadAllTypes(game)
         Gamefield.preload(game)
-        UpcommingPanelsBoard.preload(game)
+        UpcomingPanelsBoard.preload(game)
         SealBoard.preload(game)
         game.load.image('ship',game.normalizeUrl('/Images/Schiff.svg'));
 
@@ -55,7 +55,7 @@ function (Phaser, $, Panel, network, _, Gamefield, Scoreboard, Player,UpcommingP
         //beachSound = game.sound.play("beachWithGulls",1,true)
         player = new Player(registername,registername)
         gamefield = new Gamefield(game,player)
-        upcomingPanelBoad = new UpcommingPanelsBoard(game,gamefield)
+        upcomingPanelBoad = new UpcomingPanelsBoard(game,gamefield)
         Scoreboard.create(game);
 
         game.sound.volume = 0;
