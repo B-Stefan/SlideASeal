@@ -2,12 +2,22 @@
  * Created by Besitzer on 14.05.2014.
  */
 
-define(['Phaser', 'jquery', './Panel', 'network', '_', 'app/Gamefield', 'app/Scoreboard', './Player'],function (Phaser, $, Panel, network, _, Gamefield, Scoreboard, Player){
+define(['Phaser',
+    'jquery',
+    './Panel',
+    'network', '_',
+    './Gamefield',
+    './Scoreboard',
+    './Player',
+    './UpcommingPanelsBoard',
+    './SealBoard'],
+function (Phaser, $, Panel, network, _, Gamefield, Scoreboard, Player,UpcommingPanelsBoard,SealBoard){
 
     var shipStripe;
     var game = new Phaser.Game(800, 600, Phaser.AUTO, 'gamefield', { preload: preload, create: create, update: update}, true);
     var gamefield;
     var scoreboard;
+    var upcomingPanelBoad
     var registername = $("#registername").text(); 
     var sessionid = $("#sessionid").text();
 
@@ -27,10 +37,10 @@ define(['Phaser', 'jquery', './Panel', 'network', '_', 'app/Gamefield', 'app/Sco
 
    function preload() {
         Panel.loadAllTypes(game)
-        //game.load.image('ship',game.normalizeUrl('/Images/Schiff.svg'));
-        //game.load.spritesheet('Robbe', game.normalizeUrl('/Images/Robbe.png'), 520, 520, 17);
-        //game.load.spritesheet('Robbe2',game.normalizeUrl('/Images/RobbeBall.png'), 520, 520, 18);
-
+        Gamefield.preload(game)
+        UpcommingPanelsBoard.preload(game)
+        SealBoard.preload(game)
+        game.load.image('ship',game.normalizeUrl('/Images/Schiff.svg'));
 
         game.load.audio("beachWithGulls",game.normalizeUrl('/sounds/beach_with_gulls.ogg'),true)
 
@@ -42,10 +52,10 @@ define(['Phaser', 'jquery', './Panel', 'network', '_', 'app/Gamefield', 'app/Sco
     function create () {
         game.physics.startSystem(Phaser.Physics.P2JS);
         shipStripe = game.add.sprite(game.world.width, -150, 'ship');
-
         //beachSound = game.sound.play("beachWithGulls",1,true)
-        player = new Player(registername,sessionid)
+        player = new Player(registername,registername)
         gamefield = new Gamefield(game,player)
+        upcomingPanelBoad = new UpcommingPanelsBoard(game,gamefield)
         Scoreboard.create(game);
 
         game.sound.volume = 0;
@@ -53,7 +63,7 @@ define(['Phaser', 'jquery', './Panel', 'network', '_', 'app/Gamefield', 'app/Sco
         game.physics.p2.restitution = 0.0;
         game.physics.p2.gravity.y = 300;
         window.test = gamefield
-        setTimeout(gamefield.testFunction,1000)
+
 
         network.addGameStartEventListener(handelGameStart);         // is called when the game starts
         network.addNewGameStateEventListener(handelGameState);      // is called when a new GameState arrives
@@ -63,15 +73,10 @@ define(['Phaser', 'jquery', './Panel', 'network', '_', 'app/Gamefield', 'app/Sco
         network.addDisconnectEventListener(handelDisconnect);       // is called when a disconnect happend
         network.register(registername, sessionid);                  // register the client at the server and join a session
 
-        //test = gamefield.children[0].getBackgroundSprite()
-        //test2 = gamefield.children[1].getBackgroundSprite()
 
 
-
-
-
-        //game.add.tween(shipStripe).to({x:-100}, 5000, Phaser.Easing.Quadratic.Out, true, 0, false);
-        //game.add.tween(shipStripe.scale).to({x:1.25, y:1.25}, 5000, Phaser.Easing.Quadratic.Out, true, 0, false);
+        game.add.tween(shipStripe).to({x:-100}, 5000, Phaser.Easing.Quadratic.Out, true, 0, false);
+        game.add.tween(shipStripe.scale).to({x:1.25, y:1.25}, 5000, Phaser.Easing.Quadratic.Out, true, 0, false);
         /*
         robbe_eins = game.add.sprite(630, 400, 'Robbe');
         robbe = game.add.sprite(600, 430, 'Robbe2');
@@ -107,22 +112,11 @@ define(['Phaser', 'jquery', './Panel', 'network', '_', 'app/Gamefield', 'app/Sco
 
     // handel GameStart
     function handelGameStart(data){
-
-        if (gamefield.getSize() == 0){
-            gamefield.createGamefield(data.field)
-        }
         console.log('!!! GameStart !!!');
-        console.log(data);
-        console.log("The next Panel is: " + data.nextPanels[0]);
-        for(var i = 0; i < 5; i++) {
-            console.log("| " + data.field[i][0] + " | " + data.field[i][1] + " | " + data.field[i][2] + " | " + data.field[i][3] + " | " + data.field[i][4] + " |")
-            console.log("|---|---|---|---|---|")
-        }
+        handelGameState(data)
     }
-
     // handel GameState
     function handelGameState(data){
-
         console.log('!!! New GameState !!!');
         console.log(data);
         console.log("The next Panel is: " + data.nextPanels[0]);
@@ -130,15 +124,12 @@ define(['Phaser', 'jquery', './Panel', 'network', '_', 'app/Gamefield', 'app/Sco
             console.log("| " + data.field[i][0] + " | " + data.field[i][1] + " | " + data.field[i][2] + " | " + data.field[i][3] + " | " + data.field[i][4] + " |")
             console.log("|---|---|---|---|---|")
         }
+
         if (gamefield.getSize() == 0){
             gamefield.createGamefield(data.field)
         }
-        if (data.actions.length > 0 ){
-            gamefield.handleNetworkActions(data.actions)
-        }
-        //@tdo set current player
-
-
+        gamefield.handleNetworkGameState(data)
+        upcomingPanelBoad.handleNetworkGameState(data)
     }
 
     // handel SlidePostion
