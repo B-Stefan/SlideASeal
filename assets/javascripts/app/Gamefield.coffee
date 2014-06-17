@@ -467,6 +467,13 @@ define ['Phaser', './Panel', 'network', './Player'], (Phaser,Panel, network,Play
       @game.setCurrentPlayer(new Player(gameState.currentPlayer,gameState.currentPlayer))
       lastTween = @handleNetworkActions(gameState.actions)
 
+      if lastTween != null and lastTween != undefined
+        lastTween.onComplete.add(()->
+          @repaintGamefield(gameState.field)
+        ,@)
+      else
+        @repaintGamefield(gameState.field)
+
     #Handle the response of the network
     #@param {array<Action>} actions  A Array of actions
     #@return {Phaser.Tween|null} returns the last tween or if actions.length == 0 null
@@ -494,6 +501,9 @@ define ['Phaser', './Panel', 'network', './Player'], (Phaser,Panel, network,Play
       return tween
 
 
+    repaintGamefield: (field)=>
+      @removeAll(true)
+      @createGamefield(field)
 
     #Translate the row col index into a server side index
     #@param {int} row - The local col
