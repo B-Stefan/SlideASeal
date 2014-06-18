@@ -61,7 +61,7 @@ define(['_'], function () {
     socket.on('disconnect', function(data) {
         console.log("RECEIVE: disconnect and try to register after 4s again");
         setTimeout(function() {
-            register(name, sessionid);
+            register(registername, sessionid);
         }, 4000);
     });
 
