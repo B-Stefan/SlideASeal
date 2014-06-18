@@ -33,30 +33,53 @@ exports.Field = function () {
     function generateTestField() {
         var newfield = [];
         
-        newfield.push([0, 0, 3, 4, 2]);
-        newfield.push([0, 2, 1, 2, 2]);
-        newfield.push([0, 0, 6, 1, 4]);
-        newfield.push([0, 3, 6, 4, 1]);
-        newfield.push([0, 7, 3, 4, 2]);
+        newfield.push([0, 0, 3, 0, 2]);
+        newfield.push([3, 2, 1, 0, 2]);
+        newfield.push([4, 6, 2, 2, 4]);
+        newfield.push([1, 3, 6, 4, 1]);
+        newfield.push([3, 7, 3, 4, 2]);
 
         return newfield;
     }
 
-    
     function slideHorizontalInLeft(m, inPanel) {
         var line = m - 1;
 
-        var old = _.first(field[line], 4)
-        field[line] = [inPanel];
+        var rowArray = getRow(line);
+        var newRowArray = [];
 
-        _.each(old, function(obj) {
-             field[line].push(obj);
-        });
+        var data
 
-        var data = {
-            SlideIn:  { type: inPanel, m: m, n:1, orientation: "horizontal" },
-            SlideOut: { m: m, n:5 }
+        var found = true;
+        var i = 0;
+
+        newRowArray.push(inPanel);
+        while(found) {
+            if (rowArray[i] != 0 && i < 5) {
+                newRowArray.push(rowArray[i]);
+                //console.log("add: " + rowArray[i]);
+                i++;
+            } else {
+                found = false;
+                for(var t = i+ 1; t < 5; t++) {
+                    newRowArray.push(rowArray[t]);
+                    //console.log("add rest: " + rowArray[t]);
+                }
+            }
         }
+
+        if(newRowArray.length == 6){
+            data = {
+                SlideIn:  { type: inPanel, m: m, n:1, orientation: "horizontal" },
+                SlideOut: { m: m, n:5 }
+            }
+        } else {
+            data = {
+                SlideIn:  { type: inPanel, m: m, n:1, orientation: "horizontal" }
+            }
+        }
+
+        setRow(line, newRowArray);
 
         return new Action.Action("Slide", data);
     }
@@ -103,14 +126,44 @@ exports.Field = function () {
     }
 
     function slideHorizontalInRight(m, inPanel) {
+        // same function as slideHorizontalInLeft only with reverse()
         var line = m - 1;
-        field[line] = _.last(field[line], 4)
-        field[line].push(inPanel);
 
-        var data = {
-            SlideIn:  { type: inPanel, m: m, n:5, orientation: "horizontal" },
-            SlideOut: { m: m, n:1 }
+        var rowArray = getRow(line).reverse();
+        var newRowArray = [];
+
+        var data
+
+        var found = true;
+        var i = 0;
+
+        newRowArray.push(inPanel);
+        while(found) {
+            if (rowArray[i] != 0 && i < 5) {
+                newRowArray.push(rowArray[i]);
+                //console.log("add: " + rowArray[i]);
+                i++;
+            } else {
+                found = false;
+                for(var t = i+ 1; t < 5; t++) {
+                    newRowArray.push(rowArray[t]);
+                    //console.log("add rest: " + rowArray[t]);
+                }
+            }
         }
+
+        if(newRowArray.length == 6){
+            data = {
+                SlideIn:  { type: inPanel, m: m, n:5, orientation: "horizontal" },
+                SlideOut: { m: m, n:1 }
+            }
+        } else {
+            data = {
+                SlideIn:  { type: inPanel, m: m, n:5, orientation: "horizontal" }
+            }
+        }
+
+        setRow(line, newRowArray.reverse());
 
         return new Action.Action("Slide", data);
     }
@@ -175,6 +228,12 @@ exports.Field = function () {
         }
 
         return row;
+    }
+
+    function setRow(inRow, inArray) {
+        for(var i=0; i<5; i++) {
+            field[inRow][i] = inArray[i];
+        }
     }
 
     function countZerosInArray(inArray) {
