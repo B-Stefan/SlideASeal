@@ -103,7 +103,31 @@ define ['Phaser', "jquery"], (Phaser, $)->
       @y = row * (bounds.height + border)
       @x = col * (bounds.width + border)
 
-      #super(x,y)
+    setPositionNeighbour:(row,col,position,anchorBounds,border = Panel.getDefaultPanelBorder())=>
+      @setPosition(row,col,border)
+      if not position of Panel.moveDirections
+        throw new Error "Please parse a moveDirection as Positoin "
+
+      if anchorBounds == undefined
+        anchorBounds = @parent.getBounds()
+      if anchorBounds != null
+        @x = @x + anchorBounds.left
+        @y = @y + anchorBounds.top
+
+
+
+      selfBounds = @getBounds()
+
+      @x = @x + selfBounds.width/2
+      @y = @y + selfBounds.height/2
+      #console.log("XY",@x,@y, row,col,position,anchorBounds,@parent)
+      switch position
+        when Panel.moveDirections.LEFT
+          @x = @x  - selfBounds.width - border
+        when Panel.moveDirections.RIGHT
+          @x = @x + selfBounds.width + border
+        when Panel.moveDirections.TOP
+          @y = @y - selfBounds.height - border
 
     setRow: (row)=>
       @_SAS_row = row

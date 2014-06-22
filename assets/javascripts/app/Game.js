@@ -55,7 +55,7 @@ function (Phaser, $, Panel, network, _, Gamefield, Scoreboard, Player,UpcomingPa
     
     function create () {
         game.physics.startSystem(Phaser.Physics.P2JS);
-        shipStripe = game.add.sprite(game.world.width, -150, 'ship');
+        shipStripe = game.add.sprite(game.world.width,-50, 'ship');
         //beachSound = game.sound.play("beachWithGulls",1,true)
 
 
@@ -85,7 +85,7 @@ function (Phaser, $, Panel, network, _, Gamefield, Scoreboard, Player,UpcomingPa
 
 
         game.add.tween(shipStripe).to({x:-100}, 5000, Phaser.Easing.Quadratic.Out, true, 0, false);
-        game.add.tween(shipStripe.scale).to({x:1.25, y:1.25}, 5000, Phaser.Easing.Quadratic.Out, true, 0, false);
+        game.add.tween(shipStripe.scale).to({x:1.1, y:1.1}, 5000, Phaser.Easing.Quadratic.Out, true, 0, false);
         /*
         robbe_eins = game.add.sprite(630, 400, 'Robbe');
         robbe = game.add.sprite(600, 430, 'Robbe2');
@@ -146,7 +146,7 @@ function (Phaser, $, Panel, network, _, Gamefield, Scoreboard, Player,UpcomingPa
     function handelSlidePostion(data){
         console.log('!!! SlidePostion !!!');
         console.log("m: " + data.m + ", n:" + data.n);
-        //console.log(data);
+        gamefield.handleNetworkSlideNewPanelPosition(data)
     }
 
     // handel Notification

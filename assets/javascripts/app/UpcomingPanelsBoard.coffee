@@ -23,5 +23,5 @@ define ['Phaser', './Panel'], (Phaser,Panel)->
       @removeAll(true) #Remove all old childs
       for panelId in data.nextPanels
         @add(new Panel(@game,@,Panel.getTypeById(panelId)))
-
       @gamefield.setPanelToPlace(@popNextPanel())
+

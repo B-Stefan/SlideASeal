@@ -19,7 +19,7 @@ define ['Phaser', './Panel', 'network', './Player'], (Phaser,Panel, network,Play
     #@param {Phaser.Game} game
     #@param {int} [x=200] The x position
     #@param {int} [y=100] The y position
-    constructor: (game, player, x = 200 , y = 100 )->
+    constructor: (game, player, x = 225 , y = 150 )->
       if not player instanceof Player
         throw  new Error ("param player must a instance of Player class")
 
@@ -51,6 +51,7 @@ define ['Phaser', './Panel', 'network', './Player'], (Phaser,Panel, network,Play
     #Create a default Gamefield
     #@param {Network.Field} field - The size of the gamefield
     createGamefield: (field)=>
+      #Create field
       rowIndex = 0
       for row in  field
         colIndex = 0
@@ -62,6 +63,20 @@ define ['Phaser', './Panel', 'network', './Player'], (Phaser,Panel, network,Play
         rowIndex=rowIndex+1
       @_SAS_size = rowIndex
 
+      @updateBackgroundSize(rowIndex,colIndex)
+
+
+
+    updateBackgroundSize: (rowCount,colCount)=>
+      #Set bg to size of the Gamefield (because resize)
+      bg = @getBackgroundPanel()
+
+      bg.x = @x - @getDefaultPanelBounds().width/2
+      bg.y = @y - @getDefaultPanelBounds().height/2
+
+
+      bg.width  = (@getDefaultPanelBounds().width+@getPanelBorder())* colCount
+      bg.height = (@getDefaultPanelBounds().height+@getPanelBorder()) * rowCount
 
     #Add the pannel to the group
     #@override
@@ -69,7 +84,8 @@ define ['Phaser', './Panel', 'network', './Player'], (Phaser,Panel, network,Play
     #@param {int} row the row to place the new panel
     #@param {int} col for the new Panel
     #@param {boolean} [animation=false] - if true a animation were played
-    add: (panel, row, col, animation = false)=>
+    #@param {Panel.moveDirections} [position=null] - if animation true we net the current position to calculate the direction
+    add: (panel, row, col, animation = false, position = null)=>
       if panel not instanceof Panel
         throw  new Error "Please set as argument an panel object"
 
@@ -77,7 +93,7 @@ define ['Phaser', './Panel', 'network', './Player'], (Phaser,Panel, network,Play
 
       #Animation
       if animation == true
-        @slideNewPanelIn(row,col,panel)
+        @slideNewPanelIn(panel,row,col,position)
       super(panel)
 
 
@@ -121,8 +137,9 @@ define ['Phaser', './Panel', 'network', './Player'], (Phaser,Panel, network,Play
     setPanelToPlace: (newPanel)=>
       if not newPanel instanceof Panel
         throw new Error ("setPanelToPlace=> newPanel is not a instance of Panel")
-      if @_SAS_panelToPlace != null
-        @_SAS_panelToPlace.destroy()
+
+      #if @_SAS_panelToPlace != null
+        #@_SAS_panelToPlace.destroy()
       newPanel.x = 100
       newPanel.y = 100
       @game.add.existing(newPanel)
@@ -212,12 +229,13 @@ define ['Phaser', './Panel', 'network', './Player'], (Phaser,Panel, network,Play
       return bounds
 
     #Slide the new Panel in and to the position rowIndex, colIndex
+    #@param {Panel} newPanel - The Panel to slide in
     #@param {int} rowIndex - The new Position index
     #@param {int} colIndex - The new Position index
-    #@param {Panel} newPanel - The Panel to slide in
     #@param {Panel.moveDirections} - position - The current position of the newPanel
 
-    slideNewPanelIn: (rowIndex, colIndex, newPanel, position)=>
+    slideNewPanelIn: (newPanel,rowIndex, colIndex, position)=>
+
 
       ###
           COL: 0   1   2   ..
@@ -226,6 +244,7 @@ define ['Phaser', './Panel', 'network', './Player'], (Phaser,Panel, network,Play
            2 | 6 | 7 | 8 | 9 | 10| Game.js:84
            3 |---|---|---|---|---| Game.js:85
       ###
+
 
       #Slide in on the left side Position 1 and 6
       #Slide in from left
@@ -252,12 +271,49 @@ define ['Phaser', './Panel', 'network', './Player'], (Phaser,Panel, network,Play
         length = @getCol(colIndex).length
 
       #Only slide if the size is maximum and the row/col is full
-      console.log(@getRow(rowIndex),length,@getSize())
+      console.log("slideNewPanelIn=>",@getRow(rowIndex),length,@getSize())
       if length == @getSize()
         @slide(rowIndex,colIndex,direction)
+      else
+        if direction == Panel.moveDirections.LEFT
+          factor = -1
+        else if direction == Panel.moveDirections.RIGHT
+          factor = 1
 
-      @slidePanel(newPanel,direction)
+        panelsToSlide  = []
+        i = 0
+        while  result != null
+          result = @getPanel(rowIndex,colIndex + i*factor)
+          if result == null
+            break
+          panelsToSlide.push(result)
+          i = i+1
 
+
+          @slidePanels(panelsToSlide,direction)
+
+
+          console.log("panelsToSlide",panelsToSlide)
+
+
+
+      if position == Panel.moveDirections.LEFT
+        newPanel.setCol(colIndex-1)
+        newPanel.setRow(rowIndex)
+
+      else if position == Panel.moveDirections.RIGHT
+        newPanel.setCol(colIndex+1)
+        newPanel.setRow(rowIndex)
+      else if position == Panel.moveDirections.TOP
+        newPanel.setCol(colIndex)
+        newPanel.setRow(rowIndex-1)
+
+      newPanelTween = @slidePanel(newPanel,direction)
+
+      newPanelTween.onComplete.add(()->
+        @add(newPanel,newPanel.getRow(),newPanel.getCol())
+      ,@)
+      return newPanelTween
 
     #Slide a complete row or col depend on the direction
     #@param {int} rowIndex - The row index to slide
@@ -302,8 +358,14 @@ define ['Phaser', './Panel', 'network', './Player'], (Phaser,Panel, network,Play
           panel.setCol(panel.getCol()+1)
 
         when Panel.moveDirections.DOWN
-          newY = newY+(dim.width   + @getPanelBorder())
-          panel.setRow(panel.getRow()+1)
+
+          factor = 1
+          col = @getCol(panel.getCol())
+          if col.length < @getSize()
+           factor = @getSize() - col.length
+          panel.setRow(panel.getRow()+factor)
+          newY = newY+(dim.width   + @getPanelBorder()) * factor
+
 
 
       @game.add.tween(panel).to({x:newX, y: newY}, 1000, Phaser.Easing.Quadratic.In, true, 0, false);
@@ -321,7 +383,7 @@ define ['Phaser', './Panel', 'network', './Player'], (Phaser,Panel, network,Play
         lastPanel = panels[panels.length-1]
 
         lastPanel.forEach((sprite)->
-          tween = @game.add.tween(sprite.scale).to({x: 0.001,y:0.001}, 100, Phaser.Easing.Quadratic.Out, true, 0, false);
+          tween = @game.add.tween(sprite.scale).to({x: 0.001,y:0.001}, 300, Phaser.Easing.Quadratic.Out, true, 0, false);
         ,@)
         tween.onComplete.add(()->
           @remove(lastPanel)
@@ -331,7 +393,7 @@ define ['Phaser', './Panel', 'network', './Player'], (Phaser,Panel, network,Play
       for panel in panels
         tween = @slidePanel(panel,direction)
 
-      if direction == Panel.moveDirections.LEFT or direction == Panel.moveDirections.RIGHT
+      if @getSize() == panels.length and (direction == Panel.moveDirections.LEFT or direction == Panel.moveDirections.RIGHT)
         velocity = 250
         if direction == Panel.moveDirections.LEFT
           velocity = velocity *-1
@@ -351,6 +413,8 @@ define ['Phaser', './Panel', 'network', './Player'], (Phaser,Panel, network,Play
     #@param {Panel} panelToKill - The Panel to kill
     #@return {Phaser.Tween} the last Tween of the slidePanels action
     killPanel: (panelToKIll)=>
+      if panelToKIll not instanceof  Panel
+        throw new Error("Please parse a panelToKill as a panel instance")
       panelsToSlide = []
 
       if panelToKIll.getRow() == 0
@@ -367,23 +431,24 @@ define ['Phaser', './Panel', 'network', './Player'], (Phaser,Panel, network,Play
       @slidePanels(panelsToSlide,Panel.moveDirections.DOWN)
 
 
+    #Check if it is your turn
+    #@return {boolean}
+    yourTurn: ()=>
+      if @game.getCurrentPlayer() != null
+        if @game.getCurrentPlayer().getSessionId() == @getPlayer().getSessionId()
+          return true
+      return false
+
+
     #Update function of the Gamefield
     #@override
     update: ()=>
 
-      #Set bg to size of the Gamefield (because resize)
-      bg = @getBackgroundPanel()
-      bg.x = @x - @getDefaultPanelBounds().width/2
-      bg.y = @y - @getDefaultPanelBounds().height/2
-
-      bg.width = @getBounds().width
-      bg.height = @getBounds().height
-
       #Update the psotion of the newPanel that the user can move around the gamefield
       #Only if the you on the turn
-      if @game.getCurrentPlayer() != null
-        if @game.getCurrentPlayer().getSessionId() == @getPlayer().getSessionId()
-          @updatePanelToPlaceFollowMouse()
+
+      if @yourTurn()
+        @updatePanelToPlaceFollowMouse()
 
       super();
 
@@ -407,22 +472,17 @@ define ['Phaser', './Panel', 'network', './Player'], (Phaser,Panel, network,Play
           if (boundsGroup.top-100 < y and  boundsGroup.top > y) or ((boundsGroup.left-100 < x and boundsGroup.left > x ) or  (boundsGroup.right+100 > x and boundsGroup.right < x))
             #Gamefield hat ein neues Panel zum plazieren => Maus folgen
 
+
+
             panelToUpdatePosition.x = @game.input.mousePointer.x;
             panelToUpdatePosition.y = @game.input.mousePointer.y;
             neighborBounds = @getNeighborBounds(panelToUpdatePosition)
+            if panelToUpdatePosition.getRow() != neighborBounds.row or panelToUpdatePosition.getCol() != neighborBounds.col
+              mN = @translateToNetworkRowCol(neighborBounds.row,neighborBounds.col, neighborBounds.position)
+              network.sendSlidePostion(mN.m, mN.n);
 
+            panelToUpdatePosition.setPositionNeighbour(neighborBounds.row,neighborBounds.col,neighborBounds.position,@getBackgroundPanel().getBounds())
 
-
-            switch neighborBounds.position
-              when Panel.moveDirections.LEFT
-                panelToUpdatePosition.x = neighborBounds.left - (neighborBounds.width + @getPanelBorder())
-                panelToUpdatePosition.y = neighborBounds.top
-              when Panel.moveDirections.RIGHT
-                panelToUpdatePosition.x = neighborBounds.left + (neighborBounds.width  + @getPanelBorder())
-                panelToUpdatePosition.y = neighborBounds.top
-              when Panel.moveDirections.TOP
-                panelToUpdatePosition.x = neighborBounds.left
-                panelToUpdatePosition.y = neighborBounds.top - (neighborBounds.height  + @getPanelBorder())
 
 
             #set click state to down
@@ -445,14 +505,28 @@ define ['Phaser', './Panel', 'network', './Player'], (Phaser,Panel, network,Play
      if action.type == "Slide"
         if action.data.SlideIn
           trans =@translateFromNetworkRowCol(action.data.SlideIn.m,action.data.SlideIn.n,action.data.SlideIn.orientation)
-          tween = @slideNewPanelIn(trans.row,trans.col,@getPanelToPlace(),trans.position)
+          tween = @slideNewPanelIn(@getPanelToPlace(),trans.row,trans.col,trans.position)
           console.log("SlideAction",trans)
           return tween
         else
           throw new Error "SlideAction must contain the SlideIn property"
       else if action.type == "Score"
-        alert("YEES hab eine ScoreAction bekommen")
-        console.log("ScroreAction")
+
+        numberOfPanels = action.data.Score.count
+        trans = @translateFromNetworkRowCol(action.data.Score.m,action.data.Score.n,action.data.Score.orientation)
+        i = 0
+        while i != numberOfPanels
+          if trans.position == Panel.moveDirections.LEFT or trans.position == Panel.moveDirections.RIGHT
+            panel = @getPanel(trans.row,trans.col+i)
+          else if trans.position == Panel.moveDirections.TOP
+            panel = @getPanel(trans.row+i,trans.col)
+          i = i+1
+          console.log(panel)
+          tween = @killPanel(panel)
+
+        return tween
+
+
       else
         console.log("HandleNetworkAction=> Action", action)
         throw new Error("HandleNetworkAction=> Unhandled Action: " + action.type)
@@ -461,14 +535,18 @@ define ['Phaser', './Panel', 'network', './Player'], (Phaser,Panel, network,Play
     handleNetworkGameState: (gameState)=>
       #setCurrent player
       @game.setCurrentPlayer(new Player(gameState.currentPlayer,gameState.currentPlayer))
-      lastTween = @handleNetworkActions(gameState.actions)
 
-      if lastTween != null and lastTween != undefined
-        lastTween.onComplete.add(()->
-          @repaintGamefield(gameState.field)
-        ,@)
-      else
-        @repaintGamefield(gameState.field)
+      #If actions in the gamestate
+      if gameState.actions.length > 0
+        lastTween = @handleNetworkActions(gameState.actions)
+
+        if lastTween != null and lastTween != undefined
+          lastTween.onComplete.add(()->
+            console.log("")
+            #@repaintGamefield(gameState.field)
+          ,@)
+        else
+          throw new Error ("handleNetworkGameState=> @handleNetworkActions must return a Phaser.Tween ")
 
     #Handle the response of the network
     #@param {array<Action>} actions  A Array of actions
@@ -490,12 +568,27 @@ define ['Phaser', './Panel', 'network', './Player'], (Phaser,Panel, network,Play
               console.log("ACTION FINSCHED ")
               nextAction()
             ,@)
+
           else
             console.log("handleNetworkActions=> Action return no tween ! ")
+        else
+          console.log("ACTION FINCHED(ALL)")
       nextAction()
 
       return tween
 
+    #Handle the update of the other players slide position
+    handleNetworkSlideNewPanelPosition: (slidePositionUpdate)=>
+      if @yourTurn()
+        return
+
+      trans = @translateFromNetworkRowCol(slidePositionUpdate.m,slidePositionUpdate.n)
+      #console.log("handleNetworkSlideNewPanelPosition", slidePositionUpdate,trans)
+      panelToPlace = @getPanelToPlace()
+      if panelToPlace == null or panelToPlace == undefined
+        throw new Error ("Panel to place cant be null or undefined")
+
+      panelToPlace.setPositionNeighbour(trans.row,trans.col,trans.position,@getBackgroundPanel().getBounds())
 
     repaintGamefield: (field)=>
       @removeAll(true)
@@ -535,7 +628,7 @@ define ['Phaser', './Panel', 'network', './Player'], (Phaser,Panel, network,Play
         row = m-1
       else if n == @getSize()+1
         position = Panel.moveDirections.RIGHT
-        col = n-1
+        col = n-2
         row = m-1
       else if m == 0
         position = Panel.moveDirections.TOP
@@ -548,14 +641,15 @@ define ['Phaser', './Panel', 'network', './Player'], (Phaser,Panel, network,Play
       if orientation != null and position == undefined
         if orientation == 'vertical'
           position = Panel.moveDirections.TOP
-        else
+        else if orientation == 'horizontal'
           if col == 0
             position = Panel.moveDirections.LEFT
           else if col ==  @getSize()-1
             position = Panel.moveDirections.RIGHT
           else
+            position = Panel.moveDirections.RIGHT
             console.log('translateFromNetworkRowCol',m,n,orientation,row,col)
-            throw new Error ("Unknown combination")
+            console.log('throw new Error ("Unknown combination")')
 
       if row == undefined  or col == undefined  or position == undefined
         console.log('translateFromNetworkRowCol',m,n,orientation)
