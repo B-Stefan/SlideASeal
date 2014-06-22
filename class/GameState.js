@@ -53,8 +53,8 @@ exports.GameState = function () {
 
                     data = {
                         Score:  {
-                            m: m,
-                            n: n,
+                            m: m+1,
+                            n: n+1,
                             type: type,
                             count: count,
                             score: score,
@@ -78,8 +78,8 @@ exports.GameState = function () {
 
                     data = {
                         Score:  {
-                            m: m,
-                            n: n,
+                            m: m+1,
+                            n: n+1,
                             type: type,
                             count: count,
                             score: score,
