@@ -96,12 +96,18 @@ define ['Phaser', "jquery"], (Phaser, $)->
       @_SAS_col = -1
       @_SAS_row = -1
 
-    setPosition: (row,col, border=Panel.getDefaultPanelBorder())=>
+    setPosition: (row,col, border=Panel.getDefaultPanelBorder(), animation = false)=>
       @setRow(row)
       @setCol(col)
       bounds = @getBounds()
-      @y = row * (bounds.height + border)
-      @x = col * (bounds.width + border)
+      newY =  row * (bounds.height + border)
+      newX =  col * (bounds.width + border)
+      if animation == false
+        @y = newY
+        @x = newX
+      else
+        return @game.add.tween(@).to({x:newX, y: newY}, 1000, Phaser.Easing.Quadratic.In, true, 0, false);
+
 
     setPositionNeighbour:(row,col,position,anchorBounds,border = Panel.getDefaultPanelBorder())=>
       @setPosition(row,col,border)
@@ -128,6 +134,81 @@ define ['Phaser', "jquery"], (Phaser, $)->
           @x = @x + selfBounds.width + border
         when Panel.moveDirections.TOP
           @y = @y - selfBounds.height - border
+
+
+    slide: (direction)=>
+      console.log("Slide=>", @getRow(),@getCol())
+      if not direction of Panel.moveDirections
+        throw new Error ("Please parse a Panel.moveDirection")
+
+      switch  direction
+        when Panel.moveDirections.DOWN  then position = Panel.moveDirections.TOP
+        when Panel.moveDirections.LEFT  then position = Panel.moveDirections.LEFT
+        when Panel.moveDirections.RIGHT then position = Panel.moveDirections.RIGHT
+        when Panel.moveDirections.TOP   then position = Panel.moveDirections.DOWN
+
+      neighbour = @getNeighbour(position)
+      if neighbour != null
+        neighbourTween = neighbour.slide(direction)
+      else
+        console.log("END")
+
+      #Set Position
+      switch  direction
+        when Panel.moveDirections.DOWN    then tween = @setPosition(@getRow()+1  ,@getCol()   ,Panel.getDefaultPanelBorder(),true)
+        when Panel.moveDirections.RIGHT   then tween = @setPosition(@getRow()    ,@getCol()+1 ,Panel.getDefaultPanelBorder(),true)
+        when Panel.moveDirections.LEFT    then tween = @setPosition(@getRow()    ,@getCol()-1 ,Panel.getDefaultPanelBorder(),true)
+        when Panel.moveDirections.TOP     then tween = @setPosition(@getRow()-1  ,@getCol()   ,Panel.getDefaultPanelBorder(),true)
+
+
+      neighbourDown = @getNeighbour(Panel.moveDirections.DOWN)
+
+      #If down is empty fall
+      if neighbourDown == null and @getRow() != @parent.getSize()-1
+        tween.onComplete.add(()->
+          @slide(Panel.moveDirections.DOWN)
+        ,@)
+
+      tween.onComplete.add(()->
+        if @getCol() == @parent.getSize() or @getCol() == -1 or @getRow() == @parent.getSize()
+          @kill()
+
+      ,@)
+      if neighbourTween != undefined
+        return neighbourTween
+      else
+        tween
+
+
+
+
+    kill: ()=>
+      tween = @game.add.tween(@.scale).to({x: 0.001,y:0.001}, 300, Phaser.Easing.Quadratic.Out, true, 0, false);
+      neighbour = @getNeighbour(Panel.moveDirections.TOP)
+      tween.onComplete.add(()->
+        @destroy()
+      ,@)
+      if neighbour != null
+        return neighbour.slide(Panel.moveDirections.DOWN)
+      else
+        return tween
+
+
+    getNeighbour: (position)=>
+      if not position of Panel.moveDirections
+        throw new Error ("Please parse a Panel.moveDirection")
+
+      result = null
+
+      switch  position
+        when Panel.moveDirections.DOWN    then result = @parent.getPanel(@getRow()+1  ,@getCol())
+        when Panel.moveDirections.RIGHT   then result = @parent.getPanel(@getRow()    ,@getCol()+1)
+        when Panel.moveDirections.LEFT    then result = @parent.getPanel(@getRow()    ,@getCol()-1)
+        when Panel.moveDirections.TOP     then result = @parent.getPanel(@getRow()-1  ,@getCol())
+
+      return result
+
+
 
     setRow: (row)=>
       @_SAS_row = row

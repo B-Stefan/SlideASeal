@@ -85,15 +85,11 @@ define ['Phaser', './Panel', 'network', './Player'], (Phaser,Panel, network,Play
     #@param {int} col for the new Panel
     #@param {boolean} [animation=false] - if true a animation were played
     #@param {Panel.moveDirections} [position=null] - if animation true we net the current position to calculate the direction
-    add: (panel, row, col, animation = false, position = null)=>
+    add: (panel, row, col)=>
       if panel not instanceof Panel
         throw  new Error "Please set as argument an panel object"
 
       panel.setPosition(row,col, @getPanelBorder())
-
-      #Animation
-      if animation == true
-        @slideNewPanelIn(panel,row,col,position)
       super(panel)
 
 
@@ -237,66 +233,6 @@ define ['Phaser', './Panel', 'network', './Player'], (Phaser,Panel, network,Play
     slideNewPanelIn: (newPanel,rowIndex, colIndex, position)=>
 
 
-      ###
-          COL: 0   1   2   ..
-      ROW: 0 | P1| P2| P3| P4| 5 | Game.js:84
-           1 |---|---|---|---|---| Game.js:85
-           2 | 6 | 7 | 8 | 9 | 10| Game.js:84
-           3 |---|---|---|---|---| Game.js:85
-      ###
-
-
-      #Slide in on the left side Position 1 and 6
-      #Slide in from left
-      if position == Panel.moveDirections.LEFT
-        direction = Panel.moveDirections.RIGHT
-
-      #Slide in on the right side Position  5 or 10
-      #Slide in from right
-      else if  position == Panel.moveDirections.RIGHT
-        direction = Panel.moveDirections.LEFT
-
-      #Sliden in from top position 1 2 3 4 5
-      #Slide other down
-      else if  position == Panel.moveDirections.TOP
-        direction = Panel.moveDirections.DOWN
-      else
-        throw  new Error (["slideNewPanelIn=> Unexpected Input: RowIndex: "+ rowIndex+" colIndex: "+colIndex, ] )
-
-
-      #Get the lenght of the row/col
-      if position == Panel.moveDirections.LEFT or position == Panel.moveDirections.RIGHT
-        length = @getRow(rowIndex).length
-      else if position == Panel.moveDirections.TOP
-        length = @getCol(colIndex).length
-
-      #Only slide if the size is maximum and the row/col is full
-      console.log("slideNewPanelIn=>",@getRow(rowIndex),length,@getSize())
-      if length == @getSize()
-        @slide(rowIndex,colIndex,direction)
-      else
-        if direction == Panel.moveDirections.LEFT
-          factor = -1
-        else if direction == Panel.moveDirections.RIGHT
-          factor = 1
-
-        panelsToSlide  = []
-        i = 0
-        while  result != null
-          result = @getPanel(rowIndex,colIndex + i*factor)
-          if result == null
-            break
-          panelsToSlide.push(result)
-          i = i+1
-
-
-          @slidePanels(panelsToSlide,direction)
-
-
-          console.log("panelsToSlide",panelsToSlide)
-
-
-
       if position == Panel.moveDirections.LEFT
         newPanel.setCol(colIndex-1)
         newPanel.setRow(rowIndex)
@@ -308,127 +244,31 @@ define ['Phaser', './Panel', 'network', './Player'], (Phaser,Panel, network,Play
         newPanel.setCol(colIndex)
         newPanel.setRow(rowIndex-1)
 
-      newPanelTween = @slidePanel(newPanel,direction)
 
-      newPanelTween.onComplete.add(()->
-        @add(newPanel,newPanel.getRow(),newPanel.getCol())
-      ,@)
-      return newPanelTween
+      @add(newPanel,newPanel.getRow(),newPanel.getCol())
+      switch  position
+        when Panel.moveDirections.DOWN    then direction = Panel.moveDirections.TOP
+        when Panel.moveDirections.RIGHT   then direction = Panel.moveDirections.LEFT
+        when Panel.moveDirections.LEFT    then direction = Panel.moveDirections.RIGHT
+        when Panel.moveDirections.TOP     then direction = Panel.moveDirections.DOWN
 
-    #Slide a complete row or col depend on the direction
-    #@param {int} rowIndex - The row index to slide
-    #@param {int} colIndex - The col index to slide
-    #@param {Panel.moveDirection} direction - The direction to slide the row, col
-    slide: (rowIndex,colIndex,direction)=>
-      ###
-       | 1 | 2 | 3 | 4 | 5 | Game.js:84
-       |---|---|---|---|---| Game.js:85
-       | 6 | 7 | 8 | 9 | 10| Game.js:84
-       |---|---|---|---|---| Game.js:85
-      ###
-      if direction ==  Panel.moveDirections.DOWN
-        panels = @getCol(colIndex)
-      else
-        panels = @getRow(rowIndex)
-        #Umsortieren, da immer das letzte element entfernt wird
-        if direction == Panel.moveDirections.LEFT
-          panels = panels.reverse()
+      @slidePanel(newPanel,direction)
 
 
-      @slidePanels(panels,direction)
 
     #Slide a singel Panel
     #@param {Panel} panel - the new Panel
     #@param {Panel.moveDirections} direction - The direction to slide the Panel
     slidePanel: (panel,direction) =>
-      if direction of Panel.moveDirections
-        throw  new Error("Please use a type of " + Panel.moveDirections + " but you use " + direction)
+     panel.slide(direction)
 
-      dim   =   panel.getBounds()
-      newX  =   panel.x
-      newY =    panel.y
-
-      switch direction
-        when Panel.moveDirections.LEFT
-          newX = newX-(dim.width   + @getPanelBorder())
-          panel.setCol(panel.getCol()-1)
-
-        when Panel.moveDirections.RIGHT
-          newX = newX+(dim.width   + @getPanelBorder())
-          panel.setCol(panel.getCol()+1)
-
-        when Panel.moveDirections.DOWN
-
-          factor = 1
-          col = @getCol(panel.getCol())
-          if col.length < @getSize()
-           factor = @getSize() - col.length
-          panel.setRow(panel.getRow()+factor)
-          newY = newY+(dim.width   + @getPanelBorder()) * factor
-
-
-
-      @game.add.tween(panel).to({x:newX, y: newY}, 1000, Phaser.Easing.Quadratic.In, true, 0, false);
-
-
-    #Slide multiple Panels in one direction
-    #IMPORTANT: The Last item on the array were killed after the animation ends
-    #@param {Array<Panel>} panels - A Array of panels to slide
-    #@param {Panel.moveDirections} direction - The direction to slide
-    #@return {Phaser.Tween} The last tween of the animation queue
-    slidePanels:(panels, direction)=>
-      tween = ()-> throw  new Error "No Last Tween set"
-
-      if direction == Panel.moveDirections.DOWN
-        lastPanel = panels[panels.length-1]
-
-        lastPanel.forEach((sprite)->
-          tween = @game.add.tween(sprite.scale).to({x: 0.001,y:0.001}, 300, Phaser.Easing.Quadratic.Out, true, 0, false);
-        ,@)
-        tween.onComplete.add(()->
-          @remove(lastPanel)
-        ,@)
-        panels.removeByValue(lastPanel)
-
-      for panel in panels
-        tween = @slidePanel(panel,direction)
-
-      if @getSize() == panels.length and (direction == Panel.moveDirections.LEFT or direction == Panel.moveDirections.RIGHT)
-        velocity = 250
-        if direction == Panel.moveDirections.LEFT
-          velocity = velocity *-1
-
-        tween.onComplete.add(
-            (panel)->
-              @game.physics.p2.enable(panel)
-              panel.setAll('body.gravity.y', 300)
-              panel.setAll('body.velocity.x',velocity)
-              panel.outOfBoundsKill = true;
-
-          ,@)
-      return tween
 
 
     #Kill a singel panel and animate the move above
     #@param {Panel} panelToKill - The Panel to kill
     #@return {Phaser.Tween} the last Tween of the slidePanels action
     killPanel: (panelToKIll)=>
-      if panelToKIll not instanceof  Panel
-        throw new Error("Please parse a panelToKill as a panel instance")
-      panelsToSlide = []
-
-      if panelToKIll.getRow() == 0
-        return
-      col  = @getCol(panelToKIll.getCol())
-      for panel in col
-        if panel.getRow() < panelToKIll.getRow()
-          panelsToSlide.push(panel)
-        else
-          break
-
-
-      panelsToSlide.push(panelToKIll)
-      @slidePanels(panelsToSlide,Panel.moveDirections.DOWN)
+      panelToKIll.kill()
 
 
     #Check if it is your turn
@@ -521,7 +361,6 @@ define ['Phaser', './Panel', 'network', './Player'], (Phaser,Panel, network,Play
           else if trans.position == Panel.moveDirections.TOP
             panel = @getPanel(trans.row+i,trans.col)
           i = i+1
-          console.log(panel)
           tween = @killPanel(panel)
 
         return tween
@@ -600,7 +439,6 @@ define ['Phaser', './Panel', 'network', './Player'], (Phaser,Panel, network,Play
     #@param {Panel.moveDirections} position - The Position to slide in
     #@return {object} A simple object like: {m: 1, n:8}
     translateToNetworkRowCol:(row,col,position)=>
-      console.log("translateToNetworkRowCol", arguments)
       if position == Panel.moveDirections.LEFT
         m = row+1
         n = 0
@@ -648,11 +486,8 @@ define ['Phaser', './Panel', 'network', './Player'], (Phaser,Panel, network,Play
             position = Panel.moveDirections.RIGHT
           else
             position = Panel.moveDirections.RIGHT
-            console.log('translateFromNetworkRowCol',m,n,orientation,row,col)
-            console.log('throw new Error ("Unknown combination")')
 
       if row == undefined  or col == undefined  or position == undefined
-        console.log('translateFromNetworkRowCol',m,n,orientation)
         throw new Error ("Unknown input")
 
       return {
