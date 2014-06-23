@@ -252,7 +252,15 @@ define ['Phaser', './Panel', 'network', './Player'], (Phaser,Panel, network,Play
         when Panel.moveDirections.LEFT    then direction = Panel.moveDirections.RIGHT
         when Panel.moveDirections.TOP     then direction = Panel.moveDirections.DOWN
 
-      @slidePanel(newPanel,direction)
+
+      if direction == Panel.moveDirections.DOWN and newPanel.getRow()  == -1
+        col = @getCol(newPanel.getCol())
+        #Only kill panel if the col is full
+        if col.length == @getSize()+1
+          lastPanelInCol = @getPanel(@getSize()-1,newPanel.getCol())
+          return lastPanelInCol.kill()
+
+      return @slidePanel(newPanel,direction)
 
 
 

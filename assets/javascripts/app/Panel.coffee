@@ -153,6 +153,8 @@ define ['Phaser', "jquery"], (Phaser, $)->
       else
         console.log("END")
 
+
+
       #Set Position
       switch  direction
         when Panel.moveDirections.DOWN    then tween = @setPosition(@getRow()+1  ,@getCol()   ,Panel.getDefaultPanelBorder(),true)
@@ -165,11 +167,13 @@ define ['Phaser', "jquery"], (Phaser, $)->
 
       #If down is empty fall
       if neighbourDown == null and @getRow() != @parent.getSize()-1
-        tween.onComplete.add(()->
-          @slide(Panel.moveDirections.DOWN)
-        ,@)
+        #tween.onComplete.add(()->
+        #  @slide(Panel.moveDirections.DOWN)
+        #,@)
+        tween = @slide(Panel.moveDirections.DOWN)
 
       tween.onComplete.add(()->
+        #right or left
         if @getCol() == @parent.getSize() or @getCol() == -1 or @getRow() == @parent.getSize()
           @kill()
 
@@ -177,8 +181,7 @@ define ['Phaser', "jquery"], (Phaser, $)->
       if neighbourTween != undefined
         return neighbourTween
       else
-        tween
-
+        return tween
 
 
 
