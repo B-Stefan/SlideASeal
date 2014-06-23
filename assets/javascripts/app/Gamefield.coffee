@@ -258,7 +258,9 @@ define ['Phaser', './Panel', 'network', './Player'], (Phaser,Panel, network,Play
         #Only kill panel if the col is full
         if col.length == @getSize()+1
           lastPanelInCol = @getPanel(@getSize()-1,newPanel.getCol())
-          return lastPanelInCol.kill()
+          tween = lastPanelInCol.kill()
+          tween.start()
+          return tween
 
       return @slidePanel(newPanel,direction)
 
@@ -268,7 +270,10 @@ define ['Phaser', './Panel', 'network', './Player'], (Phaser,Panel, network,Play
     #@param {Panel} panel - the new Panel
     #@param {Panel.moveDirections} direction - The direction to slide the Panel
     slidePanel: (panel,direction) =>
-     panel.slide(direction)
+     tween = panel.slide(direction)
+
+     tween.start()
+     return tween
 
 
 
@@ -276,8 +281,9 @@ define ['Phaser', './Panel', 'network', './Player'], (Phaser,Panel, network,Play
     #@param {Panel} panelToKill - The Panel to kill
     #@return {Phaser.Tween} the last Tween of the slidePanels action
     killPanel: (panelToKIll)=>
-      panelToKIll.kill()
-
+      tween = panelToKIll.kill()
+      tween.start()
+      return tween
 
     #Check if it is your turn
     #@return {boolean}

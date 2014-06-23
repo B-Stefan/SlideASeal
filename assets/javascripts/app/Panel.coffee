@@ -106,7 +106,7 @@ define ['Phaser', "jquery"], (Phaser, $)->
         @y = newY
         @x = newX
       else
-        return @game.add.tween(@).to({x:newX, y: newY}, 1000, Phaser.Easing.Quadratic.In, true, 0, false);
+        return @game.add.tween(@).to({x:newX, y: newY}, 1000, Phaser.Easing.Quadratic.In, false, 0, false);
 
 
     setPositionNeighbour:(row,col,position,anchorBounds,border = Panel.getDefaultPanelBorder())=>
@@ -167,34 +167,53 @@ define ['Phaser', "jquery"], (Phaser, $)->
 
       #If down is empty fall
       if neighbourDown == null and @getRow() != @parent.getSize()-1
-        #tween.onComplete.add(()->
-        #  @slide(Panel.moveDirections.DOWN)
-        #,@)
-        tween = @slide(Panel.moveDirections.DOWN)
+        downTween = @slide(Panel.moveDirections.DOWN)
+        if direction != Panel.moveDirections.DOWN
+          tween.onComplete.add(()->
+            downTween.start()
+          ,@)
+        else
+          tween.onStart.add(()->
+            downTween.start()
+          ,@)
 
       tween.onComplete.add(()->
         #right or left
-        if @getCol() == @parent.getSize() or @getCol() == -1 or @getRow() == @parent.getSize()
-          @kill()
+        if @parent != undefined
+          if @getCol() == @parent.getSize() or @getCol() == -1 or @getRow() == @parent.getSize()
+            killTween = @kill()
+            killTween.start()
 
       ,@)
       if neighbourTween != undefined
-        return neighbourTween
+        if direction != Panel.moveDirections.DOWN
+          neighbourTween.onStart.add(()->
+            tween.start()
+          ,@)
+          return neighbourTween
+        else
+          tween.onStart.add(()->
+            neighbourTween.start()
+          ,@)
+          return tween
       else
         return tween
 
 
 
     kill: ()=>
-      tween = @game.add.tween(@.scale).to({x: 0.001,y:0.001}, 300, Phaser.Easing.Quadratic.Out, true, 0, false);
+      tween = @game.add.tween(@.scale).to({x: 0.001,y:0.001}, 300, Phaser.Easing.Quadratic.Out, false, 0, false);
       neighbour = @getNeighbour(Panel.moveDirections.TOP)
       tween.onComplete.add(()->
         @destroy()
       ,@)
       if neighbour != null
-        return neighbour.slide(Panel.moveDirections.DOWN)
-      else
-        return tween
+        neighbourTween = neighbour.slide(Panel.moveDirections.DOWN)
+        tween.onStart.add(()->
+          neighbourTween.start()
+        ,@)
+        neighbourTween
+      return tween
 
 
     getNeighbour: (position)=>
