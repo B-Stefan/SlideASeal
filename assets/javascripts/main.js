@@ -3,11 +3,14 @@ require({
   paths: {
     jquery: 'vendor/jquery/jquery',
     Phaser: 'vendor/phaser/phaser',
-    _: 'vendor/underscore/underscore'
+    '_': 'vendor/underscore/underscore'
   },
   shim: {
     Phaser: {
       exports: 'Phaser'
+    },
+    '_': {
+        exports: '_'
     }
   }
 });
