@@ -5,7 +5,8 @@
 define(['Phaser',
     'jquery',
     './Panel',
-    'network', '_',
+    'network',
+    '_',
     './Gamefield',
     './Scoreboard',
     './Player',
@@ -152,6 +153,7 @@ function (Phaser, $, Panel, network, _, Gamefield, Scoreboard, Player,UpcomingPa
     // handel Notification
     function handelNotification(data){
         console.log('!!! Notification !!!');
+        gamefield.handleNetworkNotification(data)
         console.log(data);
     }
 

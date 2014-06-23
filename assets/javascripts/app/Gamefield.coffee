@@ -1,4 +1,9 @@
-define ['Phaser', './Panel', 'network', './Player'], (Phaser,Panel, network,Player)->
+define ['Phaser',
+        '_'
+        ,'./Panel'
+        , 'network'
+        ,'./Player'],
+(Phaser, _ ,Panel, network,Player)->
 
 
 
@@ -401,6 +406,14 @@ define ['Phaser', './Panel', 'network', './Player'], (Phaser,Panel, network,Play
         else
           throw new Error ("handleNetworkGameState=> @handleNetworkActions must return a Phaser.Tween ")
 
+    #Handle all messages from the Server
+    handleNetworkNotification: (message)=>
+      if message.msg == "a player leave the game"
+        panelToPlace = @getPanelToPlace()
+        panelToPlace.destroy()
+        @setPanelToPlace(null)
+
+
     #Handle the response of the network
     #@param {array<Action>} actions  A Array of actions
     #@return {Phaser.Tween|null} returns the last tween or if actions.length == 0 null
@@ -408,6 +421,9 @@ define ['Phaser', './Panel', 'network', './Player'], (Phaser,Panel, network,Play
       self = @
       if actions.length == 0
         return
+
+
+
       tween = null
       actionToCall = actions[0]
       nextAction =  () ->
