@@ -36,7 +36,7 @@ function (Phaser, $, Panel, network, _, Gamefield, Scoreboard, Player,UpcomingPa
         game._SAS_currentPlayer = player
     }
     game.normalizeUrl = function(relativeUrl){
-        return 'http://' + window.location.host + relativeUrl
+        return 'http://' + window.location.host + relativeUrl;
     }
 
 
@@ -47,7 +47,7 @@ function (Phaser, $, Panel, network, _, Gamefield, Scoreboard, Player,UpcomingPa
         SealBoard.preload(game)
         game.load.image('ship',game.normalizeUrl('/Images/Schiff.svg'));
 
-        game.load.audio("beachWithGulls",game.normalizeUrl('/sounds/beach_with_gulls.ogg'),true)
+        game.load.audio("beachWithGulls", game.normalizeUrl('/sounds/beach_with_gulls.ogg'),true)
 
 
         //game.load.audio("beachWithGulls",game.normalizeUrl('/sounds/beach_with_gulls.ogg'),true)
