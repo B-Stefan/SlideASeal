@@ -1,7 +1,7 @@
 define ['Phaser', "jquery"], (Phaser, $)->
 
   class PanelType
-    @baseUrl = 'http://' + window.location.host + '/images/panels/'
+    @baseUrl = 'http://' + window.location.host + '/Images/panels/'
     @defaultExtention = '.png'
     constructor: (name,id)->
       @name = name
