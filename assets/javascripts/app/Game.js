@@ -36,7 +36,7 @@ function (Phaser, $, Panel, network, _, Gamefield, Scoreboard, Player,UpcomingPa
         game._SAS_currentPlayer = player
     }
     game.normalizeUrl = function(relativeUrl){
-        return 'http://'+window.location.host+ relativeUrl
+        return window.location.origin+ relativeUrl
     }
 
 
