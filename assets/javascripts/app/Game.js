@@ -11,16 +11,16 @@ define(['Phaser',
     './Scoreboard',
     './Player',
     './UpcomingPanelsBoard',
-    './SealBoard'],
-function (Phaser, $, Panel, network, _, Gamefield, Scoreboard, Player,UpcomingPanelsBoard,SealBoard){
+    './SealBoard',
+    './Banner'],
+function (Phaser, $, Panel, network, _, Gamefield, Scoreboard, Player, UpcomingPanelsBoard, SealBoard, Banner){
 
     var shipStripe;
     var game = new Phaser.Game(800, 600, Phaser.AUTO, 'gamefield', { preload: preload, create: create, update: update}, true);
     var gamefield;
     var scoreboard;
-    var upcomingPanelBoad
-    var sealBoard
-
+    var upcomingPanelBoad;
+    var sealBoard;
 
     //Get Vars from server
     var registername = $("#registername").text(); 
@@ -42,19 +42,17 @@ function (Phaser, $, Panel, network, _, Gamefield, Scoreboard, Player,UpcomingPa
 
    function preload() {
         Panel.loadAllTypes(game)
+        Banner.preload(game);
         Gamefield.preload(game)
         UpcomingPanelsBoard.preload(game)
         SealBoard.preload(game)
-        game.load.image('ship',game.normalizeUrl('/Images/Schiff.svg'));
+        game.load.image('ship', game.normalizeUrl('/Images/Schiff.svg'));
 
-        game.load.audio("beachWithGulls", game.normalizeUrl('/sounds/beach_with_gulls.ogg'),true)
-
-
-        //game.load.audio("beachWithGulls",game.normalizeUrl('/sounds/beach_with_gulls.ogg'),true)
-
+        game.load.audio("beachWithGulls", game.normalizeUrl('/sounds/beach_with_gulls.ogg'),true);
    }
     
     function create () {
+        game.stage.disableVisibilityChange = true;
         game.physics.startSystem(Phaser.Physics.P2JS);
         shipStripe = game.add.sprite(game.world.width,-50, 'ship');
         //beachSound = game.sound.play("beachWithGulls",1,true)
@@ -76,29 +74,14 @@ function (Phaser, $, Panel, network, _, Gamefield, Scoreboard, Player,UpcomingPa
 
         network.addGameStartEventListener(handelGameStart);         // is called when the game starts
         network.addNewGameStateEventListener(handelGameState);      // is called when a new GameState arrives
-        network.addScoreEventListener(Scoreboard.updateScoreboard); // is called when new Score information are available
-        network.addScoreEventListener(sealBoard.handleNetworkScoreAction); // is called when new Score information are available
+        network.addScoreEventListener(handelScore);                 // is called when a new Score arrives
         network.addSlidePostionEventListener(handelSlidePostion);   // is called when the current slider move the current panel
         network.addNotificationEventListener(handelNotification);   // is called when a notification happend
         network.addDisconnectEventListener(handelDisconnect);       // is called when a disconnect happend
         network.register(registername, sessionid);                  // register the client at the server and join a session
 
-
-
         game.add.tween(shipStripe).to({x:-100}, 5000, Phaser.Easing.Quadratic.Out, true, 0, false);
         game.add.tween(shipStripe.scale).to({x:1.1, y:1.1}, 5000, Phaser.Easing.Quadratic.Out, true, 0, false);
-        /*
-        robbe_eins = game.add.sprite(630, 400, 'Robbe');
-        robbe = game.add.sprite(600, 430, 'Robbe2');
-
-        robbe.scale.set(0.3);
-        robbe_eins.scale.set(0.28);
-        anim = robbe.animations.add('walk');
-        anim.play( 13, true );
-        anim_eins = robbe_eins.animations.add('walk');
-        anim_eins.play( 10, true );
-        anim = robbe.animations.add('walk');
-        anim.play( 13, true );*/
     }
 
     function update(){
@@ -125,6 +108,7 @@ function (Phaser, $, Panel, network, _, Gamefield, Scoreboard, Player,UpcomingPa
         console.log('!!! GameStart !!!');
         handelGameState(data)
     }
+
     // handel GameState
     function handelGameState(data){
         console.log('!!! New GameState !!!');
@@ -143,18 +127,37 @@ function (Phaser, $, Panel, network, _, Gamefield, Scoreboard, Player,UpcomingPa
         upcomingPanelBoad.handleNetworkGameState(data)
     }
 
+    // handel Score
+    function handelScore(data){
+        Scoreboard.updateScoreboard(data); 
+        sealBoard.handleNetworkScoreAction(data);
+    }
+
     // handel SlidePostion
     function handelSlidePostion(data){
-        console.log('!!! SlidePostion !!!');
-        console.log("m: " + data.m + ", n:" + data.n);
+        //console.log('!!! SlidePostion !!!');
+        //console.log("m: " + data.m + ", n:" + data.n);
         gamefield.handleNetworkSlideNewPanelPosition(data)
     }
 
     // handel Notification
     function handelNotification(data){
-        console.log('!!! Notification !!!');
-        gamefield.handleNetworkNotification(data)
-        console.log(data);
+        //console.log('!!! Notification !!!');
+        //console.log(data);
+        
+        if (data.msg == 'not your turn') {
+            Banner.play('not-your-turn');
+        }
+
+        if (data.msg == 'your turn') {
+            Banner.play('your-turn');  
+        }
+
+        if (data.msg == 'a player leave the game') {
+            Banner.play('player-disconnected');
+        }
+
+        gamefield.handleNetworkNotification(data);
     }
 
     // handel Disconnect

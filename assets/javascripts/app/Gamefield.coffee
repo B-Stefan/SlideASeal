@@ -1,9 +1,10 @@
 define ['Phaser',
-        '_'
-        ,'./Panel'
-        , 'network'
-        ,'./Player'],
-(Phaser, _ ,Panel, network,Player)->
+        '_',
+        './Panel',
+        'network',
+        './Player',
+        './Banner'],
+(Phaser, _ ,Panel, network,Player, Banner)->
 
 
 
@@ -28,7 +29,7 @@ define ['Phaser',
       if not player instanceof Player
         throw  new Error ("param player must a instance of Player class")
 
-      super(game,null, 'GAME@FIELD',true,true)
+      super(game,game.world, 'GAME@FIELD',true,true)
       @x = x
       @y = y
 
@@ -36,6 +37,7 @@ define ['Phaser',
       @_SAS_background.width = @getBounds().width
       @_SAS_background.height = @getBounds().height
       @game.add.existing(@_SAS_background);
+      @game.add.existing(@);
       @_SAS_player = player
       @_SAS_panelToPlace = null;
       @panelColiisionGroup =  @game.physics.p2.createCollisionGroup();
@@ -370,6 +372,15 @@ define ['Phaser',
         else
           throw new Error "SlideAction must contain the SlideIn property"
       else if action.type == "Score"
+
+        if action.data.Score.count == 3
+          Banner.play('three-of-a-kind')
+
+        if action.data.Score.count == 4
+          Banner.play('four-of-a-kind')
+
+        if action.data.Score.count == 5
+          Banner.play('five-of-a-kind')
 
         numberOfPanels = action.data.Score.count
         trans = @translateFromNetworkRowCol(action.data.Score.m,action.data.Score.n,action.data.Score.orientation)

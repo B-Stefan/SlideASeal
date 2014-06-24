@@ -15,7 +15,7 @@ define(['_'], function () {
 
     // Request
     register = function(inName, inSessionId) {
-        console.log("SEND: register with name: " + inName + ", sessionid: " + inSessionId );
+        //console.log("SEND: register with name: " + inName + ", sessionid: " + inSessionId );
         socket.emit('register', { registername: inName, sessionid: inSessionId });
 
         registername = inName;
@@ -23,12 +23,12 @@ define(['_'], function () {
     }
 
     slide = function(m, n) {
-        console.log("SEND: slide with m: " + m + ", n: " + n );
+        //console.log("SEND: slide with m: " + m + ", n: " + n );
         socket.emit('slide', { m: m, n: n });
     }
 
     sendSlidePostion = function(m, n) {
-        console.log("SEND: slidePostion with m: " + m + ", n: " + n );
+        //console.log("SEND: slidePostion with m: " + m + ", n: " + n );
         socket.emit('slidePostion', { m: m, n: n });
     }
 
@@ -49,7 +49,7 @@ define(['_'], function () {
     });
 
     socket.on('slidePostion', function(data) {
-        console.log("RECEIVE: slidePostion");
+        //console.log("RECEIVE: slidePostion");
         SlidePostionFunction(data);
     });
 
