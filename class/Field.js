@@ -11,8 +11,8 @@ var Action = require("./Action.js"),
  */
 exports.Field = function () {
     /** @access private */
-    var field = generateTestField();
-    //var field = generateRandomField();
+    //var field = generateTestField();
+    var field = generateRandomField();
 
     purgeSpaces();
 
