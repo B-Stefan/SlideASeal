@@ -27,4 +27,22 @@ define(['jquery', 'app/Game'], function($) {
         return this;
     }
 
+    $(document).ready(function() {
+
+      $( "#gamelink" ).val("http://" + window.location.host + "/" + $("#sessionid").text() + "/NAME" );
+
+      $( "#open-instruction" ).click(function() {
+        $( "#instruction" ).fadeIn("slow");
+        $( "#instruction-video" )[0].play();
+        console.log("blub");
+      });
+
+      $( "#instruction" ).click(function() {
+        $( "#instruction" ).fadeOut("slow");
+        $( "#instruction-video" )[0].pause();
+      });
+
+
+    });
+
 });

@@ -4,5 +4,5 @@ exports.index = function(req, res) {
 		sessionid: req.params.sessionid,
 		registername: req.params.registername
 	}
-	res.render('test', options);
+	res.render('test2', options);
 } 
