@@ -124,6 +124,7 @@ function (Phaser, $, Panel, network, _, Gamefield, Scoreboard, Player, UpcomingP
                         },this)
 
                         shipStripeBickTween.onComplete.add(function(){
+                                $('#info').first().fadeIn()
                                 upcomingPanelBoad.show()
                         },this)
 
@@ -179,6 +180,7 @@ function (Phaser, $, Panel, network, _, Gamefield, Scoreboard, Player, UpcomingP
 
     // handel GameState
     function handelGameState(data){
+        $('#info').remove()
         console.log('!!! New GameState !!!');
         console.log(data);
         console.log(data.actions[0])
