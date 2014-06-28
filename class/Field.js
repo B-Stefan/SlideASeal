@@ -33,11 +33,11 @@ exports.Field = function () {
     function generateTestField() {
         var newfield = [];
         
-        newfield.push([0, 0, 3, 0, 2]);
-        newfield.push([3, 2, 1, 0, 2]);
-        newfield.push([4, 6, 2, 2, 4]);
-        newfield.push([1, 3, 6, 4, 1]);
-        newfield.push([3, 7, 3, 4, 2]);
+        newfield.push([0, 0, 3, 1, 1]);
+        newfield.push([3, 2, 1, 2, 2]);
+        newfield.push([4, 6, 1, 3, 3]);
+        newfield.push([1, 3, 6, 4, 4]);
+        newfield.push([3, 7, 3, 5, 5]);
 
         return newfield;
     }
@@ -163,7 +163,7 @@ exports.Field = function () {
             }
         }
 
-        setRow(line, newRowArray.reverse());
+        setRow(line, _.last(newRowArray.reverse(), 5));
 
         return new Action.Action("Slide", data);
     }

@@ -179,6 +179,7 @@ exports.GameState = function () {
             var nextSliderSocket = inSession.getOtherSocket(inSocket);
             console.log("now its " + nextSliderSocket.name + "turn!")
 
+            nextSliderSocket.emit("notification", {msg: "your turn"});
             this.setSliderSocket(nextSliderSocket);
         }
 

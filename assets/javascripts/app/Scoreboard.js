@@ -1,4 +1,4 @@
-define(['_'], function () {
+define(['_', './Banner'], function (_, Banner) {
 
     var lefttext;
     var righttext;
