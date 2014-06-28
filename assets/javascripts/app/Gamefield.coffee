@@ -28,20 +28,25 @@ define ['Phaser',
       if not player instanceof Player
         throw  new Error ("param player must a instance of Player class")
 
-      super(game,null, 'GAME@FIELD',true,true)
+      super(game,null, 'GAME@FIELD',false,false)
       @x = x
       @y = y
 
       @_SAS_background = new Phaser.Sprite(game,@x-(@getPanelBorder()+68),@y-(@getPanelBorder()+68),'Gamefield_bg')
       @_SAS_background.width = @getBounds().width
       @_SAS_background.height = @getBounds().height
-      @game.add.existing(@_SAS_background);
       @_SAS_player = player
       @_SAS_panelToPlace = null;
-      @panelColiisionGroup =  @game.physics.p2.createCollisionGroup();
-      #@enableBody = true;
-      #@physicsBodyType = Phaser.Physics.P2JS;
       @_SAS_size = 0
+      @_SAS_siVisible = false
+
+
+    show: ()=>
+      @_SAS_siVisible = true
+      @game.add.existing(this)
+      @getBackgroundPanel().alpha = 0.1
+      @game.add.existing(@getBackgroundPanel());
+
 
 
     #Returns the background Panel
@@ -63,7 +68,10 @@ define ['Phaser',
         for panelTypeId in  row
           panelType = Panel.getTypeById(panelTypeId)
           if panelTypeId !=0
-            @add(new Panel(@game,@,panelType),rowIndex,colIndex)
+            newPanel = new Panel(@game,@,panelType)
+            if @_SAS_siVisible == false
+              newPanel.alpha = 1
+            @add(newPanel,rowIndex,colIndex)
           colIndex = colIndex+1
         rowIndex=rowIndex+1
       @_SAS_size = rowIndex
@@ -344,18 +352,19 @@ define ['Phaser',
 
 
 
-            #set click state to down
-            if @game.input.mousePointer.isDown
-              if @SAS_TEMP_CLICK_DOWN == false or @SAS_TEMP_CLICK_DOWN == undefined
-                @SAS_TEMP_CLICK_DOWN = true
+          #set click state to down
+          if @game.input.mousePointer.isDown
+            if @SAS_TEMP_CLICK_DOWN == false or @SAS_TEMP_CLICK_DOWN == undefined
+              @SAS_TEMP_CLICK_DOWN = true
 
-            if @game.input.mousePointer.isUp
-              #Clieck released
-              if @SAS_TEMP_CLICK_DOWN
-                @SAS_TEMP_CLICK_DOWN = false
-                #Translate the into mN cords
-                mN = @translateToNetworkRowCol(neighborBounds.row,neighborBounds.col, neighborBounds.position)
-                network.slide(mN.m, mN.n);
+          if @game.input.mousePointer.isUp
+            #Clieck released
+            if @SAS_TEMP_CLICK_DOWN
+              @SAS_TEMP_CLICK_DOWN = false
+              #Translate the into mN cords
+              neighborBounds = @getNeighborBounds(panelToUpdatePosition)
+              mN = @translateToNetworkRowCol(neighborBounds.row,neighborBounds.col, neighborBounds.position)
+              network.slide(mN.m, mN.n);
 
     #Handle a single networkk action
     #@param {Action} action - The action to handle

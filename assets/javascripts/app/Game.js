@@ -45,7 +45,9 @@ function (Phaser, $, Panel, network, _, Gamefield, Scoreboard, Player,UpcomingPa
         Gamefield.preload(game)
         UpcomingPanelsBoard.preload(game)
         SealBoard.preload(game)
-        game.load.image('ship',game.normalizeUrl('/Images/Schiff.svg'));
+        game.load.image('ship',game.normalizeUrl('/Images/Schiff.png'));
+        game.load.image('shipBroken',game.normalizeUrl('/Images/SchiffAufgebrochen.png'));
+        game.load.image('shipBrick',game.normalizeUrl('/Images/SchiffBrick.png'));
 
         game.load.audio("beachWithGulls",game.normalizeUrl('/sounds/beach_with_gulls.ogg'),true)
 
@@ -56,7 +58,8 @@ function (Phaser, $, Panel, network, _, Gamefield, Scoreboard, Player,UpcomingPa
     
     function create () {
         game.physics.startSystem(Phaser.Physics.P2JS);
-        shipStripe = game.add.sprite(game.world.width,-50, 'ship');
+        shipStripe = game.add.sprite(game.world.width,-80, 'ship');
+        shipStripe.scale.setTo(0.5)
         //beachSound = game.sound.play("beachWithGulls",1,true)
 
 
@@ -85,8 +88,57 @@ function (Phaser, $, Panel, network, _, Gamefield, Scoreboard, Player,UpcomingPa
 
 
 
-        game.add.tween(shipStripe).to({x:-100}, 5000, Phaser.Easing.Quadratic.Out, true, 0, false);
-        game.add.tween(shipStripe.scale).to({x:1.1, y:1.1}, 5000, Phaser.Easing.Quadratic.Out, true, 0, false);
+        time = 5000
+        shipTween = game.add.tween(shipStripe).to({x:-140}, time, Phaser.Easing.Quadratic.Out, true, 0, false);
+        game.add.tween(shipStripe.scale).to({x:0.75, y:0.75}, time, Phaser.Easing.Quadratic.Out, true, 0, false);
+
+
+
+        var run = false
+        if (run == false){
+            shipTween.onComplete.add(function(){
+                shakeTween = game.add.tween(shipStripe).to({ x: -150 }, 100, Phaser.Easing.Quadratic.In,true,1,10).yoyo(true).loop().start();
+
+                //If shake complete
+                shakeTween.onComplete.add(function(){
+
+                    if(run==false){
+                        //Show broken ship
+                        shipStripeBroken = game.add.sprite(shipStripe.x,shipStripe.y, 'shipBroken');
+                        shipStripeBroken.scale.x = shipStripe.scale.x
+                        shipStripeBroken.scale.y = shipStripe.scale.y
+                        shipStripe.destroy()
+                        shipStripe = shipStripeBroken
+                        game.world.sendToBack(shipStripe)
+
+                        shipStripeBick = game.add.sprite(shipStripe.x,shipStripe.y, 'shipBrick');
+                        shipStripeBick.scale.x = shipStripe.scale.x
+                        shipStripeBick.scale.y = shipStripe.scale.y
+
+                        game.world.bringToTop(shipStripeBick)
+                        shipStripeBickTween = game.add.tween(shipStripeBick).to({y: game.world.height +100},3000)
+                        shipStripeBickTween.onStart.add(function(){
+                            if (run == false) {
+                                run  = true
+                                gamefield.show()
+                                game.world.bringToTop(shipStripeBick)
+                            }
+                        },this)
+
+                        shipStripeBickTween.onComplete.add(function(){
+                                upcomingPanelBoad.show()
+                        },this)
+
+                        if (run == false) {
+                            shipStripeBickTween.start()
+                        }
+                    }
+
+                },this)
+
+            },this)
+        }
+
         /*
         robbe_eins = game.add.sprite(630, 400, 'Robbe');
         robbe = game.add.sprite(600, 430, 'Robbe2');

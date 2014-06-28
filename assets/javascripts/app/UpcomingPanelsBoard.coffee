@@ -3,13 +3,19 @@ define ['Phaser', './Panel'], (Phaser,Panel)->
 
     @preload: (game)->
       console.log('')
-    constructor: (game,gamefield, x , y = 50 )->
+    constructor: (game,gamefield, x , y = 100 )->
       if gamefield == undefined
         throw  new Error("Please parse a Gamefield")
-      super(game,null, 'UpcomingPanelsBoard',true,true)
+      super(game,null, 'UpcomingPanelsBoard',false,false)
       @gamefield = gamefield
-      @x = x ? game.world.width - 120
+      @x = x ? game.world.width - 60
       @y = y
+
+    show: ()=>
+      @game.world.addChild(@)
+      @x = @game.world.width
+      @game.add.tween(@).to({x: @game.world.width-120 },1000,Phaser.Easing.Linear.None,true);
+
 
     add: (panel)=>
       panel.setPosition(@children.length+1,1)

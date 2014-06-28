@@ -16,7 +16,7 @@ define ['Phaser', "jquery"], (Phaser, $)->
 
     # @static
     # Default border between 2 Panels on the Gamefield and UpcomingPanelBoad
-    @getDefaultPanelBorder: ()-> 10
+    @getDefaultPanelBorder: ()-> 11
 
 
     # @static
@@ -134,6 +134,13 @@ define ['Phaser', "jquery"], (Phaser, $)->
           @x = @x + selfBounds.width + border
         when Panel.moveDirections.TOP
           @y = @y - selfBounds.height - border
+
+
+    show: ()=>
+      @typeSprite.alpha = 1
+      @backgroundSprite.alpha = 1
+      #@game.add.tween(@typeSprite).to(alpha: 1, 200, Phaser.Easing.Quadratic.In,true);
+      #@game.add.tween(@backgroundSprite).to(alpha: 1, 200, Phaser.Easing.Quadratic.In,true);
 
 
     slide: (direction)=>
