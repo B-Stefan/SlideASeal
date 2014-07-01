@@ -47,6 +47,7 @@ define ['Phaser',
       @_SAS_siVisible = true
       @game.add.existing(this)
       @getBackgroundPanel().alpha = 0.1
+      @getPanelToPlace().visible = 1
       @game.add.existing(@getBackgroundPanel());
 
 
@@ -155,6 +156,9 @@ define ['Phaser',
       newPanel.y = 100
       @game.add.existing(newPanel)
       @_SAS_panelToPlace = newPanel
+
+      if @_SAS_siVisible == false
+        newPanel.visible = false
 
     #Get the current panel to place
     #@return {Panel|null} Panel or null if undefined
