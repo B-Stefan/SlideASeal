@@ -29,7 +29,7 @@ define ['Phaser',
       if not player instanceof Player
         throw  new Error ("param player must a instance of Player class")
 
-      super(game,null, 'GAME@FIELD',false,false)
+      super(game,null, 'GAMEFIELD',false,false)
 
       @x = x
       @y = y
@@ -420,7 +420,7 @@ define ['Phaser',
 
         if lastTween != null and lastTween != undefined
           lastTween.onComplete.add(()->
-            console.log("")
+            console.log("Repaint")
             #@repaintGamefield(gameState.field)
           ,@)
         else
@@ -547,6 +547,8 @@ define ['Phaser',
       }
 
 
+    #Returns the bounds of the first children or a 0 bounds objects
+    #@returns {Phaser.Bounds} s
     getDefaultPanelBounds:()=>
       if @children.length > 0
         return @children[0].getBounds()
@@ -557,9 +559,4 @@ define ['Phaser',
           width: 0
           height: 0
         }
-
-
-    testKill:(row, col)=>
-      panelToKill = @getPanel(row,col)
-      @killPanel(panelToKill)
 
