@@ -23,7 +23,8 @@ function (Phaser, $, Panel, network, _, Gamefield, Scoreboard, Player, UpcomingP
     var sealBoard;
 
     //Get Vars from server
-    var registername = $("#registername").text(); 
+    var registername = prompt("Wie heißt du?", "");//$("#registername").text(); 
+    $("#registername").text(registername);
     var sessionid = $("#sessionid").text();
 
 
@@ -152,18 +153,15 @@ function (Phaser, $, Panel, network, _, Gamefield, Scoreboard, Player, UpcomingP
             },this)
         }
 
-        /*
-        robbe_eins = game.add.sprite(630, 400, 'Robbe');
-        robbe = game.add.sprite(600, 430, 'Robbe2');
-
-        robbe.scale.set(0.3);
-        robbe_eins.scale.set(0.28);
-        anim = robbe.animations.add('walk');
-        anim.play( 13, true );
-        anim_eins = robbe_eins.animations.add('walk');
-        anim_eins.play( 10, true );
-        anim = robbe.animations.add('walk');
-        anim.play( 13, true );*/
+        $('#mute').click(function(){
+            if ($(this).text() == "Mute") {
+                game.sound.volume = 0;
+                $(this).text("Unmute");
+            } else {
+                game.sound.volume = 1;
+                $(this).text("Mute");
+            }    
+        });
 
     }
 
