@@ -12,15 +12,14 @@ define(['Phaser',
     './Player',
     './UpcomingPanelsBoard',
     './SealBoard',
-    './Banner'],
-function (Phaser, $, Panel, network, _, Gamefield, Scoreboard, Player, UpcomingPanelsBoard, SealBoard, Banner){
+    './Banner',
+    './Seal'],
+function (Phaser, $, Panel, network, _, Gamefield, Scoreboard, Player, UpcomingPanelsBoard, SealBoard, Banner,Seal){
 
     var shipStripe;
-    var game = new Phaser.Game(800, 600, Phaser.AUTO, 'gamefield', { preload: preload, create: create, update: update}, true);
+    var game = new Phaser.Game(800, 600, Phaser.AUTO, 'gamefield', { preload: preload, create: create, update: update, render: render}, true);
     var gamefield;
-    var scoreboard;
     var upcomingPanelBoad;
-    var sealBoard;
 
     //Get Vars from server
     var registername = $("#registername").text(); 
@@ -46,13 +45,17 @@ function (Phaser, $, Panel, network, _, Gamefield, Scoreboard, Player, UpcomingP
         Gamefield.preload(game)
         UpcomingPanelsBoard.preload(game)
         SealBoard.preload(game)
+        Seal.preload(game)
         game.load.image('ship',game.normalizeUrl('/Images/Schiff.png'));
         game.load.image('shipBroken',game.normalizeUrl('/Images/SchiffAufgebrochen.png'));
         game.load.image('shipBrick',game.normalizeUrl('/Images/SchiffBrick.png'));
-
         game.load.audio("beachWithGulls",game.normalizeUrl('/sounds/beach_with_gulls.ogg'),true)
 
    }
+    function render() {
+
+
+    }
     
     function create () {
         game.stage.disableVisibilityChange = true;
@@ -65,15 +68,13 @@ function (Phaser, $, Panel, network, _, Gamefield, Scoreboard, Player, UpcomingP
         you = new Player(registername,registername)
         gamefield = new Gamefield(game,you)
         upcomingPanelBoad = new UpcomingPanelsBoard(game,gamefield)
-        sealBoard = new SealBoard(game,you)
-
         Scoreboard.create(game);
+
 
         game.sound.volume = 0;
 
         game.physics.p2.restitution = 0.0;
-        game.physics.p2.gravity.y = 300;
-        window.test = gamefield
+        game.physics.p2.gravity.y = 5000;
 
 
         network.addGameStartEventListener(handelGameStart);         // is called when the game starts
@@ -122,10 +123,15 @@ function (Phaser, $, Panel, network, _, Gamefield, Scoreboard, Player, UpcomingP
                                 game.world.bringToTop(shipStripeBick)
                             }
                         },this)
-
+                        run2 = false
                         shipStripeBickTween.onComplete.add(function(){
-                                $('#info').first().fadeIn()
-                                upcomingPanelBoad.show()
+
+                            if(run2 == false){
+                                 run2 = true
+                                 $('#info').first().fadeIn()
+                                 upcomingPanelBoad.show()
+                                 Scoreboard.show();
+                             }
                         },this)
 
                         if (run == false) {
@@ -199,8 +205,7 @@ function (Phaser, $, Panel, network, _, Gamefield, Scoreboard, Player, UpcomingP
 
     // handel Score
     function handelScore(data){
-        Scoreboard.updateScoreboard(data); 
-        sealBoard.handleNetworkScoreAction(data);
+        Scoreboard.updateScoreboard(data);
     }
 
     // handel SlidePostion
