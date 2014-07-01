@@ -50,8 +50,19 @@ function (Phaser, $, Panel, network, _, Gamefield, Scoreboard, Player, UpcomingP
         game.load.image('shipBroken',game.normalizeUrl('/Images/SchiffAufgebrochen.png'));
         game.load.image('shipBrick',game.normalizeUrl('/Images/SchiffBrick.png'));
 
-        game.load.audio("beachWithGulls",game.normalizeUrl('/sounds/beach_with_gulls.ogg'),true)
-
+        game.load.audio("beachWithGulls", game.normalizeUrl('/sounds/beach_with_gulls.ogg'), true);
+        game.load.audio("seal1", game.normalizeUrl('/sounds/seals/seal1.ogg'), true);
+        game.load.audio("seal2", game.normalizeUrl('/sounds/seals/seal2.ogg'), true);
+        game.load.audio("seal3", game.normalizeUrl('/sounds/seals/seal3.ogg'), true);
+        game.load.audio("seal4", game.normalizeUrl('/sounds/seals/seal4.ogg'), true);
+        game.load.audio("seal5", game.normalizeUrl('/sounds/seals/seal5.ogg'), true);
+        game.load.audio("seal6", game.normalizeUrl('/sounds/seals/seal6.ogg'), true);
+        game.load.audio("seal7", game.normalizeUrl('/sounds/seals/seal7.ogg'), true);
+        game.load.audio("seal8", game.normalizeUrl('/sounds/seals/seal8.ogg'), true);
+        game.load.audio("seal9", game.normalizeUrl('/sounds/seals/seal9.ogg'), true);
+        game.load.audio("seal10", game.normalizeUrl('/sounds/seals/seal10.ogg'), true);
+        game.load.audio("seal11", game.normalizeUrl('/sounds/seals/seal11.ogg'), true);
+        game.load.audio("seal11", game.normalizeUrl('/sounds/seals/seal12.ogg'), true);
    }
     
     function create () {
