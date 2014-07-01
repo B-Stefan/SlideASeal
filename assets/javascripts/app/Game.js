@@ -17,12 +17,13 @@ define(['Phaser',
 function (Phaser, $, Panel, network, _, Gamefield, Scoreboard, Player, UpcomingPanelsBoard, SealBoard, Banner,Seal){
 
     var shipStripe;
-    var game = new Phaser.Game(800, 600, Phaser.AUTO, 'gamefield', { preload: preload, create: create, update: update, render: render}, true);
+    var game = new Phaser.Game(800, 600, Phaser.AUTO, 'gamefield', { preload: preload, create: create, update: update}, true);
     var gamefield;
     var upcomingPanelBoad;
 
     //Get Vars from server
-    var registername = $("#registername").text(); 
+    var registername = prompt("Wie heißt du?", "");//$("#registername").text(); 
+    $("#registername").text(registername);
     var sessionid = $("#sessionid").text();
 
 
@@ -49,32 +50,45 @@ function (Phaser, $, Panel, network, _, Gamefield, Scoreboard, Player, UpcomingP
         game.load.image('ship',game.normalizeUrl('/Images/Schiff.png'));
         game.load.image('shipBroken',game.normalizeUrl('/Images/SchiffAufgebrochen.png'));
         game.load.image('shipBrick',game.normalizeUrl('/Images/SchiffBrick.png'));
-        game.load.audio("beachWithGulls",game.normalizeUrl('/sounds/beach_with_gulls.ogg'),true)
 
+        game.load.audio("beach", game.normalizeUrl('/sounds/ambient/beach.ogg'), true);
+        game.load.audio("icecrash", game.normalizeUrl('/sounds/ambient/icecrash.ogg'), true);
+        game.load.audio("siren", game.normalizeUrl('/sounds/ambient/siren.ogg'), true);
+        game.load.audio("seal1", game.normalizeUrl('/sounds/seals/seal1.ogg'), true);
+        game.load.audio("seal2", game.normalizeUrl('/sounds/seals/seal2.ogg'), true);
+        game.load.audio("seal3", game.normalizeUrl('/sounds/seals/seal3.ogg'), true);
+        game.load.audio("seal4", game.normalizeUrl('/sounds/seals/seal4.ogg'), true);
+        game.load.audio("seal5", game.normalizeUrl('/sounds/seals/seal5.ogg'), true);
+        game.load.audio("seal6", game.normalizeUrl('/sounds/seals/seal6.ogg'), true);
+        game.load.audio("seal7", game.normalizeUrl('/sounds/seals/seal7.ogg'), true);
+        game.load.audio("seal8", game.normalizeUrl('/sounds/seals/seal8.ogg'), true);
+        game.load.audio("seal9", game.normalizeUrl('/sounds/seals/seal9.ogg'), true);
+        game.load.audio("seal10", game.normalizeUrl('/sounds/seals/seal10.ogg'), true);
+        game.load.audio("seal11", game.normalizeUrl('/sounds/seals/seal11.ogg'), true);
+        game.load.audio("seal11", game.normalizeUrl('/sounds/seals/seal12.ogg'), true);
    }
-    function render() {
-
-
-    }
     
     function create () {
         game.stage.disableVisibilityChange = true;
         game.physics.startSystem(Phaser.Physics.P2JS);
         shipStripe = game.add.sprite(game.world.width,-80, 'ship');
-        shipStripe.scale.setTo(0.5)
-        //beachSound = game.sound.play("beachWithGulls",1,true)
+        shipStripe.scale.setTo(0.5);
+        
+        beachSound = game.sound.play("beach", 1, true);
 
 
         you = new Player(registername,registername)
         gamefield = new Gamefield(game,you)
         upcomingPanelBoad = new UpcomingPanelsBoard(game,gamefield)
+        sealBoard = new SealBoard(game,you)
+
         Scoreboard.create(game);
 
-
-        game.sound.volume = 0;
+        //game.sound.volume = 0;
 
         game.physics.p2.restitution = 0.0;
-        game.physics.p2.gravity.y = 5000;
+        game.physics.p2.gravity.y = 300;
+        window.test = game;
 
 
         network.addGameStartEventListener(handelGameStart);         // is called when the game starts
@@ -88,8 +102,9 @@ function (Phaser, $, Panel, network, _, Gamefield, Scoreboard, Player, UpcomingP
 
 
         time = 5000
-        shipTween = game.add.tween(shipStripe).to({x:-140}, time, Phaser.Easing.Quadratic.Out, true, 0, false);
-        game.add.tween(shipStripe.scale).to({x:0.75, y:0.75}, time, Phaser.Easing.Quadratic.Out, true, 0, false);
+        shipTween = game.add.tween(shipStripe).to({x:-140}, time, Phaser.Easing.Quadratic.In, true, 0, false);
+        game.add.tween(shipStripe.scale).to({x:0.75, y:0.75}, time, Phaser.Easing.Quadratic.In, true, 0, false);
+        sirenSound = game.sound.play("siren", 0.5, false);
 
 
 
@@ -97,6 +112,7 @@ function (Phaser, $, Panel, network, _, Gamefield, Scoreboard, Player, UpcomingP
         if (run == false){
             shipTween.onComplete.add(function(){
                 shakeTween = game.add.tween(shipStripe).to({ x: -150 }, 100, Phaser.Easing.Quadratic.In,true,1,10).yoyo(true).loop().start();
+                icecrushSound = game.sound.play("icecrash", 1, false);
 
                 //If shake complete
                 shakeTween.onComplete.add(function(){
@@ -144,26 +160,23 @@ function (Phaser, $, Panel, network, _, Gamefield, Scoreboard, Player, UpcomingP
             },this)
         }
 
-        /*
-        robbe_eins = game.add.sprite(630, 400, 'Robbe');
-        robbe = game.add.sprite(600, 430, 'Robbe2');
-
-        robbe.scale.set(0.3);
-        robbe_eins.scale.set(0.28);
-        anim = robbe.animations.add('walk');
-        anim.play( 13, true );
-        anim_eins = robbe_eins.animations.add('walk');
-        anim_eins.play( 10, true );
-        anim = robbe.animations.add('walk');
-        anim.play( 13, true );*/
+        $('#mute').click(function(){
+            if ($(this).text() == "Mute") {
+                game.sound.volume = 0;
+                $(this).text("Unmute");
+            } else {
+                game.sound.volume = 1;
+                $(this).text("Mute");
+            }    
+        });
 
     }
 
     function update(){
-
+        /*
         if(  game.sound.volume < 1){
             game.sound.volume =  game.sound.volume +0.0001
-        }
+        }*/
         
     }
 

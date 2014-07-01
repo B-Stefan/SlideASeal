@@ -15,7 +15,7 @@ define(['_'], function () {
     }
 
     function play(inType) {
-        banner = game.add.sprite(game.world.width/2, game.world.height/2, inType);
+        var banner = game.add.sprite(game.world.width/2, game.world.height/2, inType);
         banner.anchor.setTo(0.5, 0.5);
         banner.scale.setTo(0.3, 0.3);
         banner.alpha = 0;

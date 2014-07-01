@@ -38,7 +38,7 @@ var GameSession = require('./class/GameSession');
         app.use(express.errorHandler());
     }
 
-    app.get("/session/:sessionid/:registername", routes.index);
+    app.get("/:sessionid", routes.index);
     //app.get("/:sessionid", routes.index);
     //app.get("/", routes.index);
 

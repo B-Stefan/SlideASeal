@@ -29,7 +29,7 @@ define(['jquery', 'app/Game'], function($) {
 
     $(document).ready(function() {
 
-      $( "#gamelink" ).val("http://" + window.location.host + "/" + $("#sessionid").text() + "/NAME" );
+      $( "#gamelink" ).val("http://" + window.location.host + "/" + $("#sessionid").text() );
 
       $( "#open-instruction" ).click(function() {
         $( "#instruction" ).fadeIn("slow");

@@ -105,6 +105,17 @@ body {
     cursor: pointer;
 }
 
+#mute{
+    position: absolute;
+    top: 10px;
+    left: 50px;
+    width: 200px;
+    font-size: 20px;
+    padding: 5px;
+    text-align: left;
+    cursor: pointer;
+}
+
 #instruction {
     display: none;
     width: 100%;
