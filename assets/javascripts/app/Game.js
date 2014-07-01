@@ -80,7 +80,6 @@ function (Phaser, $, Panel, network, _, Gamefield, Scoreboard, Player, UpcomingP
         you = new Player(registername,registername)
         gamefield = new Gamefield(game,you)
         upcomingPanelBoad = new UpcomingPanelsBoard(game,gamefield)
-        sealBoard = new SealBoard(game,you)
 
         Scoreboard.create(game);
 

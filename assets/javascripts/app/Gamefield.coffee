@@ -47,7 +47,9 @@ define ['Phaser',
       @_SAS_siVisible = true
       @game.add.existing(this)
       @getBackgroundPanel().alpha = 0.1
-      @getPanelToPlace().visible = 1
+      panelToPlace = @getPanelToPlace()
+      if panelToPlace != null and panelToPlace != undefined
+        panelToPlace.visible = 1
       @game.add.existing(@getBackgroundPanel());
 
 
