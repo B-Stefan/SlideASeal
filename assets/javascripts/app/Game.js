@@ -50,7 +50,9 @@ function (Phaser, $, Panel, network, _, Gamefield, Scoreboard, Player, UpcomingP
         game.load.image('shipBroken',game.normalizeUrl('/Images/SchiffAufgebrochen.png'));
         game.load.image('shipBrick',game.normalizeUrl('/Images/SchiffBrick.png'));
 
-        game.load.audio("beachWithGulls", game.normalizeUrl('/sounds/beach_with_gulls.ogg'), true);
+        game.load.audio("beach", game.normalizeUrl('/sounds/ambient/beach.ogg'), true);
+        game.load.audio("icecrash", game.normalizeUrl('/sounds/ambient/icecrash.ogg'), true);
+        game.load.audio("siren", game.normalizeUrl('/sounds/ambient/siren.ogg'), true);
         game.load.audio("seal1", game.normalizeUrl('/sounds/seals/seal1.ogg'), true);
         game.load.audio("seal2", game.normalizeUrl('/sounds/seals/seal2.ogg'), true);
         game.load.audio("seal3", game.normalizeUrl('/sounds/seals/seal3.ogg'), true);
@@ -69,22 +71,22 @@ function (Phaser, $, Panel, network, _, Gamefield, Scoreboard, Player, UpcomingP
         game.stage.disableVisibilityChange = true;
         game.physics.startSystem(Phaser.Physics.P2JS);
         shipStripe = game.add.sprite(game.world.width,-80, 'ship');
-        shipStripe.scale.setTo(0.5)
-        //beachSound = game.sound.play("beachWithGulls",1,true)
+        shipStripe.scale.setTo(0.5);
+        
+        beachSound = game.sound.play("beach", 1, true);
 
-
-        you = new Player(registername,registername)
-        gamefield = new Gamefield(game,you)
-        upcomingPanelBoad = new UpcomingPanelsBoard(game,gamefield)
-        sealBoard = new SealBoard(game,you)
+        you = new Player(registername,registername);
+        gamefield = new Gamefield(game,you);
+        upcomingPanelBoad = new UpcomingPanelsBoard(game,gamefield);
+        sealBoard = new SealBoard(game,you);
 
         Scoreboard.create(game);
 
-        game.sound.volume = 0;
+        //game.sound.volume = 0;
 
         game.physics.p2.restitution = 0.0;
         game.physics.p2.gravity.y = 300;
-        window.test = gamefield
+        window.test = game;
 
 
         network.addGameStartEventListener(handelGameStart);         // is called when the game starts
@@ -98,15 +100,16 @@ function (Phaser, $, Panel, network, _, Gamefield, Scoreboard, Player, UpcomingP
 
 
         time = 5000
-        shipTween = game.add.tween(shipStripe).to({x:-140}, time, Phaser.Easing.Quadratic.Out, true, 0, false);
-        game.add.tween(shipStripe.scale).to({x:0.75, y:0.75}, time, Phaser.Easing.Quadratic.Out, true, 0, false);
-
+        shipTween = game.add.tween(shipStripe).to({x:-140}, time, Phaser.Easing.Quadratic.In, true, 0, false);
+        game.add.tween(shipStripe.scale).to({x:0.75, y:0.75}, time, Phaser.Easing.Quadratic.In, true, 0, false);
+        sirenSound = game.sound.play("siren", 0.5, false);
 
 
         var run = false
         if (run == false){
             shipTween.onComplete.add(function(){
                 shakeTween = game.add.tween(shipStripe).to({ x: -150 }, 100, Phaser.Easing.Quadratic.In,true,1,10).yoyo(true).loop().start();
+                icecrushSound = game.sound.play("icecrash", 1, false);
 
                 //If shake complete
                 shakeTween.onComplete.add(function(){
@@ -165,10 +168,10 @@ function (Phaser, $, Panel, network, _, Gamefield, Scoreboard, Player, UpcomingP
     }
 
     function update(){
-
+        /*
         if(  game.sound.volume < 1){
             game.sound.volume =  game.sound.volume +0.0001
-        }
+        }*/
         
     }
 

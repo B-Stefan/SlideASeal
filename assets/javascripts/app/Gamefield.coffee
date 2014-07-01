@@ -318,6 +318,10 @@ define ['Phaser',
 
       if @yourTurn()
         @updatePanelToPlaceFollowMouse()
+      else
+        if @game.input.mousePointer.isDown
+          Banner.play('not-your-turn')
+          @game.input.mousePointer.isDown = false;
 
       super();
 
