@@ -34,7 +34,6 @@ define(['jquery', 'app/Game'], function($) {
       $( "#open-instruction" ).click(function() {
         $( "#instruction" ).fadeIn("slow");
         $( "#instruction-video" )[0].play();
-        console.log("blub");
       });
 
       $( "#instruction" ).click(function() {

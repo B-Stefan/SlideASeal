@@ -105,6 +105,18 @@ body {
     cursor: pointer;
 }
 
+#scoreboard {
+    background-color: #FFF;
+    width: 150px;
+    height: 512px;
+    position: absolute;
+    top: 0px;
+    left: -120px;
+    background-image: url('/Images/scoreboard.png');
+    background-repeat: no-repeat;
+    border-radius: 20px; 
+}
+
 #mute{
     position: absolute;
     top: 10px;
