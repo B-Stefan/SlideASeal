@@ -50,7 +50,7 @@ define ['Phaser',
 
         #Tween to old psotion
         lastTween = @game.add.tween(seal).to(x:oldX,y:oldY,1000,Phaser.Easing.Quadratic.Out,true,Math.random()*1000)
-
+        seal.setShow(true)
 
       #If all displayed, start loop
       lastTween.onComplete.add(()->
@@ -133,7 +133,11 @@ define ['Phaser',
         i = i+1
 
       for seal in sealsToChange
-        seal.changeSide(sealBoardToAdd)
+        lastTween = seal.changeSide(sealBoardToAdd)
+
+      return lastTween
+
+
 
     #Returns the number of seals
     #@return {int}
