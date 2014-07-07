@@ -11,6 +11,9 @@ body {
     font-family: 'Montserrat', sans-serif;
 }
 
+h1{
+    font-size: 25px;
+}
 header, main, footer {
     width: 800px;
     margin-left: auto;
@@ -32,7 +35,13 @@ main {
     background-color: white;
     position: relative;
     padding: 50px;
-    border-radius: 20px; 
+    b-webkit-border-radius: 20px;
+    -moz-border-radius: 20px;
+    border-radius: 20px;
+
+    -webkit-box-shadow: 10px 10px 36px 0px rgba(0,0,0,0.75);
+    -moz-box-shadow: 10px 10px 36px 0px rgba(0,0,0,0.75);
+    box-shadow: 10px 10px 36px 0px rgba(0,0,0,0.75);
 }
 
 footer {
@@ -44,7 +53,41 @@ footer {
     color: #014371;
 }
 
+.animated-delay-long{
+    -webkit-animation-delay:0.5s;
+    -moz-animation-delay:0.5s;
+    -ms-animation-delay:0.5s;
+    -o-animation-delay:0.5s;
+    animation-delay:0.5s
+}
 
+input{
+    border: 1px solid #DADADA;
+    color: #888;
+    height: 30px;
+    margin-bottom: 16px;
+    margin-right: 6px;
+    margin-top: 2px;
+    outline: 0 none;
+    padding: 3px 3px 3px 5px;
+    width: 70%;
+    font-size: 12px;
+    line-height:15px;
+    box-shadow: inset 0px 1px 4px #ECECEC;
+    -moz-box-shadow: inset 0px 1px 4px #ECECEC;
+    -webkit-box-shadow: inset 0px 1px 4px #ECECEC;
+    line-height: normal;
+}
+button {
+    background: #f75414;
+    border: none;
+    padding: 10px 25px 10px 25px;
+    color: #FFF;
+    font-size: 25;
+    border-radius: 3px;
+    cursor: pointer;
+    line-height: normal;
+}
 /**
 * Specific layout for gamefield
 * views/gamefield.hsb
@@ -54,15 +97,20 @@ footer {
     background-image: url('../Images/Hintergrund.png');
     background-size: cover;
     width: 800px;
+    height: 600px;
     margin-left: auto;
     margin-right: auto;
+    border: 1px;
+    border-color: lightblue;
+    border-style: solid;
+
 }
 
 
 /**
 * Info field
 */
-#info {
+#info,#askPlayerName {
     display: none;
     position: absolute;
     top: 100px;
@@ -70,20 +118,22 @@ footer {
     width: 500px;
     padding: 75px;
     left: 150px;
-    border-radius: 20px; 
+    -webkit-border-radius: 20px;
+    -moz-border-radius: 20px;
+    border-radius: 20px;
 
     font-size: 24px;
     line-height: 34px;
 }
 
-#info input {
+#info input, #askPlayerName  input {
     margin-top: 10px;
     width: 100%;
     font-size: 24px;
     margin-bottom: 20px;
 }
 
-#info #sessionid, #info #registername {
+.highlight, #info #sessionid, #info #registername {
     color: #f75414;
 }
 
@@ -96,6 +146,31 @@ footer {
     padding: 5px;
     text-align: right;
     cursor: pointer;
+}
+
+#scoreboard {
+    background-color: #FFF;
+    width: 200px;
+    height: auto;
+    padding: 20px;
+    position: absolute;
+    top: 0px;
+    left: -190px;
+    display: none;
+
+
+    /**
+    * Border left top corner and left down corner
+    */
+    -webkit-border-top-left-radius: 20px;
+    -webkit-border-bottom-left-radius: 20px;
+    -moz-border-radius-topleft: 20px;
+    -moz-border-radius-bottomleft: 20px;
+    border-top-left-radius: 20px;
+    border-bottom-left-radius: 20px;
+}
+#scoreboard img {
+    width: 130px;
 }
 
 #mute{

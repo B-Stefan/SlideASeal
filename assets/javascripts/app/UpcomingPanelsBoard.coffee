@@ -8,6 +8,9 @@ define ['Phaser', './Panel'], (Phaser,Panel)->
     #Load all required sprites and so
     @preload: (game)->
       console.log('')
+
+
+
     #Crate a new Upcoming Panels Board
     #@param {Phaser.Game} game
     #@param {Gamefied} gamefield - The Gamefield
@@ -26,7 +29,7 @@ define ['Phaser', './Panel'], (Phaser,Panel)->
     show: ()=>
       @game.world.addChild(@)
       @x = @game.world.width
-      @game.add.tween(@).to({x: @game.world.width-120 },1000,Phaser.Easing.Linear.None,true);
+      @game.add.tween(@).to({x: @game.world.width-140 },1000,Phaser.Easing.Linear.None,true);
 
 
 
@@ -37,6 +40,10 @@ define ['Phaser', './Panel'], (Phaser,Panel)->
         throw new Error("Please parse a Panel Instance")
       panel.setPosition(@children.length+1,1)
       super(panel)
+      index = @children.indexOf(panel)
+
+      #Set panels like a carpet
+      panel.x =  panel.x + (panel.getBounds().width/3 * index)
 
     #Remove the oldest Panel in children Array
     #@return {Panel}

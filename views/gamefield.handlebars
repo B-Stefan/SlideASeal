@@ -1,6 +1,9 @@
-<div id="gamefield"></div>
+<div id="gamefield" ></div>
 <div id="open-instruction">Show instructions</div>
 <div id="mute">Mute</div>
+<div id="scoreboard">
+    <img alt="Auflistung der Punkte pro Kistenart" src="images/scoreboard.png">
+</div>
 
 <div id="instruction">
     <video width="320" id="instruction-video">
@@ -18,6 +21,18 @@
 
     <input id="gamelink" type="link" name="value"><br>
 </div>
+
+<div id="askPlayerName">
+    <h1>Hallo und willkommen</h1>
+    <p> bei unserem  Spiel <span class="highlight">SlideASeal</span>  wie möchtest du dich in diesem Spiel nennen? </p>
+
+    <div class="float">
+        <input id="playerName" placeholder="Dein Name" type="text" name="value">
+        <button type="submit">Spiel starten</button>
+    </div>
+    <br>
+</div>
+
 
 <script src="/socket.io/socket.io.js"></script>
 <script src="/javascripts/vendor/requirejs/require.js" data-main="/javascripts/main.js"></script>

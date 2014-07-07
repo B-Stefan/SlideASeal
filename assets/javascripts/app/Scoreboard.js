@@ -90,7 +90,7 @@ define(['_', './Banner', './SealBoard', './Seal'], function (_, Banner,SealBoard
         tween.onComplete.add(function(){
 
             yourSealBoard = getSealBoardBySide(data.you.side)
-            rivalSealBoard = getSealBoardBySide(data.you.side)
+            rivalSealBoard = getSealBoardBySide(data.rival.side)
 
             if (yourSealBoard.getNumberOfSeals() == 0 ){
                 Banner.play("you-lose",false)
