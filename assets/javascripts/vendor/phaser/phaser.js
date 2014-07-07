@@ -27347,7 +27347,7 @@
      * @class Phaser.BitmapData
      *
      * @classdesc A BitmapData object contains a Canvas element to which you can draw anything you like via normal Canvas context operations.
-     * A single BitmapData can be used as the texture one or many Images/Sprites. So if you need to dynamically create a Sprite texture then they are a good choice.
+     * A single BitmapData can be used as the texture one or many images/Sprites. So if you need to dynamically create a Sprite texture then they are a good choice.
      *
      * @constructor
      * @param {Phaser.Game} game - A reference to the currently running game.
@@ -29429,7 +29429,7 @@
         this.position.set(x, y);
 
         /**
-         * @property {Phaser.Point} world - The world coordinates of this Image. This differs from the x/y coordinates which are relative to the Images container.
+         * @property {Phaser.Point} world - The world coordinates of this Image. This differs from the x/y coordinates which are relative to the images container.
          */
         this.world = new Phaser.Point(x, y);
 
@@ -29820,7 +29820,7 @@
     };
 
     /**
-     * Brings the Image to the top of the display list it is a child of. Images that are members of a Phaser.Group are only
+     * Brings the Image to the top of the display list it is a child of. images that are members of a Phaser.Group are only
      * bought to the top of that Group, not the entire display list.
      *
      * @method Phaser.Image#bringToTop
@@ -43686,10 +43686,10 @@
 
     /**
      * Phaser loader constructor.
-     * The Loader handles loading all external content such as Images, Sounds, Texture Atlases and data files.
+     * The Loader handles loading all external content such as images, Sounds, Texture Atlases and data files.
      * It uses a combination of Image() loading and xhr and provides progress and completion callbacks.
      * @class Phaser.Loader
-     * @classdesc  The Loader handles loading all external content such as Images, Sounds, Texture Atlases and data files.
+     * @classdesc  The Loader handles loading all external content such as images, Sounds, Texture Atlases and data files.
      * It uses a combination of Image() loading and xhr and provides progress and completion callbacks.
      * @constructor
      * @param {Phaser.Game} game - A reference to the currently running game.
@@ -55402,7 +55402,7 @@
 
             map.layers = layers;
 
-            //  Images
+            //  images
             var images = [];
 
             for (var i = 0; i < json.layers.length; i++)

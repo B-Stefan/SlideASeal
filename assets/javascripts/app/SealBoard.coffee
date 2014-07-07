@@ -23,7 +23,7 @@ define ['Phaser',
       if side == Seal.sides.LEFT
         @x = -100
       else if side == Seal.sides.RIGHT
-        @x = @game.world.width/2
+        @x = @game.world.width/2 - 100
       @y = @game.world.height
 
       @side = side

@@ -61,7 +61,7 @@ define(['_', './Banner', './SealBoard', './Seal'], function (_, Banner,SealBoard
 
         difference = Math.abs(yourScore-otherScore)
 
-        Math.floor(numberOfSealsToAdd = difference/60)              //Always round down
+        numberOfSealsToAdd = Math.floor(difference/60)              //Always round down
         newNumberOfSeals = numberOfSealsTotal/2+numberOfSealsToAdd
 
         //If you a good player
@@ -85,8 +85,7 @@ define(['_', './Banner', './SealBoard', './Seal'], function (_, Banner,SealBoard
         }
 
         console.log("ScoreSealChange ",newNumberOfSeals)
-        //Change the seals
-        //sealBoard.changeSealSide(sealBoard.getNumberOfSeals()-newNumberOfSeals, otherSealBoard);
+
 
     }
 

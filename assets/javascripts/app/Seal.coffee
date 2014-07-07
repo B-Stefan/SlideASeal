@@ -14,6 +14,22 @@ define ['Phaser', './SealBoard'], (Phaser, SealBoard)->
       game.load.spritesheet('RobbeBallLeft', game.normalizeUrl('/Images/RobbeBallLinks.png'), 520, 520, 18);
 
 
+      game.load.audio("beach", game.normalizeUrl('/sounds/ambient/beach.ogg'), true);
+      game.load.audio("icecrash", game.normalizeUrl('/sounds/ambient/icecrash.ogg'), true);
+      game.load.audio("siren", game.normalizeUrl('/sounds/ambient/siren.ogg'), true);
+      game.load.audio("seal1", game.normalizeUrl('/sounds/seals/seal1.ogg'), true);
+      game.load.audio("seal2", game.normalizeUrl('/sounds/seals/seal2.ogg'), true);
+      game.load.audio("seal3", game.normalizeUrl('/sounds/seals/seal3.ogg'), true);
+      game.load.audio("seal4", game.normalizeUrl('/sounds/seals/seal4.ogg'), true);
+      game.load.audio("seal5", game.normalizeUrl('/sounds/seals/seal5.ogg'), true);
+      game.load.audio("seal6", game.normalizeUrl('/sounds/seals/seal6.ogg'), true);
+      game.load.audio("seal7", game.normalizeUrl('/sounds/seals/seal7.ogg'), true);
+      game.load.audio("seal8", game.normalizeUrl('/sounds/seals/seal8.ogg'), true);
+      game.load.audio("seal9", game.normalizeUrl('/sounds/seals/seal9.ogg'), true);
+      game.load.audio("seal10", game.normalizeUrl('/sounds/seals/seal10.ogg'), true);
+      game.load.audio("seal11", game.normalizeUrl('/sounds/seals/seal11.ogg'), true);
+      game.load.audio("seal11", game.normalizeUrl('/sounds/seals/seal12.ogg'), true);
+
     #@static
     #Animation types
     @animationTypes: {
@@ -131,7 +147,6 @@ define ['Phaser', './SealBoard'], (Phaser, SealBoard)->
         newX = Math.random()*200
 
       newY = @y
-      console.log(newX,@side)
 
       delay = Math.random()
       tween = @game.add.tween(@).to(x: newX, y: newY,1000,Phaser.Easing.Quadratic.Out,true,delay)

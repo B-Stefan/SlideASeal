@@ -11,7 +11,7 @@ define(['_'], function () {
         game.load.image('three-of-a-kind', game.normalizeUrl('/Images/banner/three-of-a-kind.png'));
         game.load.image('you-lose', game.normalizeUrl('/Images/banner/you-lose.png'));
         game.load.image('you-win', game.normalizeUrl('/Images/banner/you-win.png'));
-        game.load.image('your-turn', game.normalizeUrl('/Images/banner/your-turn.png'));     
+        game.load.image('your-turn', game.normalizeUrl('/Images/banner/your-turn.png'));
     }
 
     function play(inType) {

@@ -34,7 +34,7 @@ define(['jquery', 'app/Game'], function($) {
       $( "#open-instruction" ).click(function() {
         $( "#instruction" ).fadeIn("slow");
         $( "#instruction-video" )[0].play();
-        console.log("blub");
+
       });
 
       $( "#instruction" ).click(function() {
@@ -42,6 +42,12 @@ define(['jquery', 'app/Game'], function($) {
         $( "#instruction-video" )[0].pause();
       });
 
+        /**
+         * Info box select complete url if click
+         */
+      $("#info").find("input").click(function () {
+            $(this).select();
+      });
 
     });
 
