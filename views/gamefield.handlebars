@@ -1,0 +1,23 @@
+<div id="gamefield"></div>
+<div id="open-instruction">Show instructions</div>
+<div id="mute">Mute</div>
+
+<div id="instruction">
+    <video width="320" id="instruction-video">
+        <source src="/videos/instruction.mp4" type="video/mp4">
+        <source src="/videos/instruction.webm" type="video/webm">
+    </video>
+    <div>Das Instruction Video kommt später!</div>
+</div>
+
+<div id="info">
+    <p>Hallo Robbe <span id="registername"></span>,<br/>
+        willkommen bei SlideASeal in der Session <span id="sessionid">{{sessionid}}</span>.</p>
+
+    <p>Um jemanden zum Spiel einzuladen verschicke folgenden Link:</p>
+
+    <input id="gamelink" type="link" name="value"><br>
+</div>
+
+<script src="/socket.io/socket.io.js"></script>
+<script src="/javascripts/vendor/requirejs/require.js" data-main="/javascripts/main.js"></script>
