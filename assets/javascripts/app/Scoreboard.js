@@ -93,10 +93,10 @@ define(['_', './Banner', './SealBoard', './Seal'], function (_, Banner,SealBoard
             rivalSealBoard = getSealBoardBySide(data.you.side)
 
             if (yourSealBoard.getNumberOfSeals() == 0 ){
-                Banner.play("you-lose")
+                Banner.play("you-lose",false)
             }
             else if (rivalSealBoard.getNumberOfSeals() == 0 ){
-                Banner.play("you-win")
+                Banner.play("you-win",false)
             }
         },this)
 
