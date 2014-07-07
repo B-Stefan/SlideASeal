@@ -25,13 +25,13 @@ define(['_', './Banner', './SealBoard', './Seal'], function (_, Banner,SealBoard
         leftSealBoard = new SealBoard(game,Seal.sides.LEFT)
         rightSealBoard = new SealBoard(game,Seal.sides.RIGHT)
 
-        window.test = {
-            left: leftSealBoard,
-            right: rightSealBoard
-        }
 
     }
 
+    /**
+     * Update the sprites on screen and if necessary change seals
+     * @param data
+     */
     function updateScoreboard(data) {
         console.log('!!! Score !!!');
         console.log("you score is: " + data.you.score);
