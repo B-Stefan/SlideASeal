@@ -22,6 +22,10 @@ exports.GameSession = function (inSocket, inSessionId) {
 
     // Private Methode
     function broadcast(inType, inData) {
+        if (socket1 == undefined || socket2 == undefined){
+            console.error("Socket 1 oder 2 is undefed no broadcast!!!!!")
+            return
+        }
         if (socket1 != undefined) {
             socket1.emit(inType, inData);
         }

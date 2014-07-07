@@ -50,9 +50,13 @@ var GameSession = require('./class/GameSession');
         // handle disconnects
         socket.on("disconnect", function () {
             var session = GameSession.findGameSession(GameSessions, socket.sessionid);
+            if (session!= undefined && session != null){
+                session.disconnect(socket);
+                console.log("disconnect " + socket.name);
+            }else{
+                console.error("Disconnect could not performed, GameSession cant find ")
+            }
 
-            session.disconnect(socket);
-            console.log("disconnect " + socket.name);
         });
 
         // register players
