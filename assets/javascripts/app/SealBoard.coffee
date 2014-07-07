@@ -65,7 +65,9 @@ define ['Phaser',
       @game.time.events.loop(Phaser.Timer.SECOND*delayInSeconds, ()->
         #in 50 percent of the cases play random loop, else play all Seals animation
         if Math.random() > 0.5
-          @getRandomSeal().playRandomAnimation()
+          seal = @getRandomSeal()
+          if seal != null and seal != undefined
+            seal.playRandomAnimation()
         else
           @playRandomAnimation()
       ,@)
