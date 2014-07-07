@@ -24,6 +24,7 @@ define(['_', './Banner', './SealBoard', './Seal'], function (_, Banner,SealBoard
 
         leftSealBoard = new SealBoard(game,Seal.sides.LEFT)
         rightSealBoard = new SealBoard(game,Seal.sides.RIGHT)
+
         window.test = {
             left: leftSealBoard,
             right: rightSealBoard
@@ -84,9 +85,30 @@ define(['_', './Banner', './SealBoard', './Seal'], function (_, Banner,SealBoard
             otherSealBoard  = leftSealBoard;
         }
 
-        console.log("ScoreSealChange ",newNumberOfSeals)
+        tween = sealBoard.changeSealSide(newNumberOfSeals,otherSealBoard)
 
+        tween.onComplete.add(function(){
 
+            yourSealBoard = getSealBoardBySide(data.you.side)
+            rivalSealBoard = getSealBoardBySide(data.you.side)
+
+            if (yourSealBoard.getNumberOfSeals() == 0 ){
+                Banner.play("you-lose")
+            }
+            else if (rivalSealBoard.getNumberOfSeals() == 0 ){
+                Banner.play("you-win")
+            }
+        },this)
+
+    }
+
+    function getSealBoardBySide(side){
+        if (side == "left"){
+            return leftSealBoard;
+        }else if (side == "right"){
+            return rightSealBoard;
+        }
+        throw new Error("Wrong side parameter")
     }
 
     /**
