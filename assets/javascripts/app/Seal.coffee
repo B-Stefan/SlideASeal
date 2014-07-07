@@ -84,6 +84,7 @@ define ['Phaser', './SealBoard'], (Phaser, SealBoard)->
       @setSize(@seal)
       @seal.animations.add("clap",null,11)
       @seal_side = side
+      @SAL_shown = false
 
 
       @sealBall = @create(x,y,spriteNames[1])
@@ -91,6 +92,9 @@ define ['Phaser', './SealBoard'], (Phaser, SealBoard)->
       @sealBall.visible = 0;
       @sealBall.animations.add("ball",null,11)
 
+    #set the shown param
+    setShow: ()=>
+      @SAL_shown = true
 
     # Setter for the side
     # @param {Seal.sides} side
@@ -155,7 +159,13 @@ define ['Phaser', './SealBoard'], (Phaser, SealBoard)->
       sealSound = @game.sound.play(sounds[soundIndex], Math.random()*0.7, false);
 
 
+    #Change the side of the seal
+    #@return {Phaser.Tween} tween animation tween
     changeSide: (newSealBoard)=>
+
+      #Return if the seal not shown jet
+      if not @SAL_shown
+        return
 
       sealBoard = newSealBoard
       bounds = @getBounds()
@@ -170,12 +180,13 @@ define ['Phaser', './SealBoard'], (Phaser, SealBoard)->
       delay = Math.random()
       tween = @game.add.tween(@).to(x: newX, y: newY,1000,Phaser.Easing.Quadratic.Out,true,delay)
       tween.onComplete.add(()->
-        console.log("Complete")
-        newSeal = new Seal(@game,sealBoard,0,0,sealBoard.getSide())
-        newSeal.setRandomPosition(sealBoard.getRandomSeal())
-        sealBoard.add(newSeal,false)
-        @destroy()
+        if @game != null
+          newSeal = new Seal(sealBoard.game,sealBoard,0,0,sealBoard.getSide())
+          newSeal.setRandomPosition(sealBoard.getRandomSeal())
+          sealBoard.add(newSeal,false)
+          @destroy()
       , @)
+      return tween
 
 
     #
