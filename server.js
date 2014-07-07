@@ -39,8 +39,8 @@ var GameSession = require('./class/GameSession');
     }
 
     app.get("/:sessionid", routes.index);
-    //app.get("/:sessionid", routes.index);
-    //app.get("/", routes.index);
+    app.get("/", routes.index);
+
 
     var GameSessions = [];
 
