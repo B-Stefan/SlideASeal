@@ -37,6 +37,9 @@ function (Phaser, $, Panel, network, _, Gamefield, Scoreboard, Player, UpcomingP
         game._SAS_currentPlayer = player
     }
     game.normalizeUrl = function(relativeUrl){
+        if (relativeUrl[0] != "/"){
+            relativeUrl = "/" + relativeUrl
+        }
         return 'http://' + window.location.host + relativeUrl;
     }
 
@@ -51,6 +54,10 @@ function (Phaser, $, Panel, network, _, Gamefield, Scoreboard, Player, UpcomingP
         game.load.image('ship',game.normalizeUrl('/Images/Schiff.png'));
         game.load.image('shipBroken',game.normalizeUrl('/Images/SchiffAufgebrochen.png'));
         game.load.image('shipBrick',game.normalizeUrl('/Images/SchiffBrick.png'));
+
+        game.load.audio("beach", game.normalizeUrl('/sounds/ambient/beach.ogg'), true);
+        game.load.audio("icecrash", game.normalizeUrl('/sounds/ambient/icecrash.ogg'), true);
+        game.load.audio("siren", game.normalizeUrl('/sounds/ambient/siren.ogg'), true);
    }
     
     function create () {
@@ -91,6 +98,7 @@ function (Phaser, $, Panel, network, _, Gamefield, Scoreboard, Player, UpcomingP
         shipTween = game.add.tween(shipStripe).to({x:-140}, time, Phaser.Easing.Quadratic.In, true, 0, false);
         game.add.tween(shipStripe.scale).to({x:0.75, y:0.75}, time, Phaser.Easing.Quadratic.In, true, 0, false);
         sirenSound = game.sound.play("siren", 0.5, false);
+
 
 
 

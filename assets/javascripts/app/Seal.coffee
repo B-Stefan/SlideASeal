@@ -13,22 +13,9 @@ define ['Phaser', './SealBoard'], (Phaser, SealBoard)->
       game.load.spritesheet('RobbeClapLeft', game.normalizeUrl('/Images/Robbelinks.png'), 520, 520, 17);
       game.load.spritesheet('RobbeBallLeft', game.normalizeUrl('/Images/RobbeBallLinks.png'), 520, 520, 18);
 
+      for key, soundUrl of Seal.soundTypes
+        game.load.audio(key, game.normalizeUrl(soundUrl), true);
 
-      game.load.audio("beach", game.normalizeUrl('/sounds/ambient/beach.ogg'), true);
-      game.load.audio("icecrash", game.normalizeUrl('/sounds/ambient/icecrash.ogg'), true);
-      game.load.audio("siren", game.normalizeUrl('/sounds/ambient/siren.ogg'), true);
-      game.load.audio("seal1", game.normalizeUrl('/sounds/seals/seal1.ogg'), true);
-      game.load.audio("seal2", game.normalizeUrl('/sounds/seals/seal2.ogg'), true);
-      game.load.audio("seal3", game.normalizeUrl('/sounds/seals/seal3.ogg'), true);
-      game.load.audio("seal4", game.normalizeUrl('/sounds/seals/seal4.ogg'), true);
-      game.load.audio("seal5", game.normalizeUrl('/sounds/seals/seal5.ogg'), true);
-      game.load.audio("seal6", game.normalizeUrl('/sounds/seals/seal6.ogg'), true);
-      game.load.audio("seal7", game.normalizeUrl('/sounds/seals/seal7.ogg'), true);
-      game.load.audio("seal8", game.normalizeUrl('/sounds/seals/seal8.ogg'), true);
-      game.load.audio("seal9", game.normalizeUrl('/sounds/seals/seal9.ogg'), true);
-      game.load.audio("seal10", game.normalizeUrl('/sounds/seals/seal10.ogg'), true);
-      game.load.audio("seal11", game.normalizeUrl('/sounds/seals/seal11.ogg'), true);
-      game.load.audio("seal11", game.normalizeUrl('/sounds/seals/seal12.ogg'), true);
 
     #@static
     #Animation types
@@ -37,6 +24,25 @@ define ['Phaser', './SealBoard'], (Phaser, SealBoard)->
       BALL: 20
       POFF: 30
     }
+
+
+    #@static
+    #Soundtypes
+    @soundTypes: {
+      seal1:"sounds/seals/seal1.ogg"
+      seal2:"sounds/seals/seal2.ogg"
+      seal3:"sounds/seals/seal3.ogg"
+      seal4:"sounds/seals/seal4.ogg"
+      seal5:"sounds/seals/seal5.ogg"
+      seal6:"sounds/seals/seal6.ogg"
+      seal7:"sounds/seals/seal7.ogg"
+      seal8:"sounds/seals/seal8.ogg"
+      seal9:"sounds/seals/seal9.ogg"
+      seal10:"sounds/seals/seal10.ogg"
+      seal11:"sounds/seals/seal11.ogg"
+
+    }
+
 
     #@Static
     #The Postion of the seal
@@ -117,7 +123,9 @@ define ['Phaser', './SealBoard'], (Phaser, SealBoard)->
 
     # Play a random sequenz of animations
     # @retuns {Phaser.Tween|null|Phaser.time.event}
+    #
     playRandomAnimation: ()=>
+
       switch (Seal.getRandomAnimationType())
         when Seal.animationTypes.BALL
             @syncPositions(@sealBall,@seal)
@@ -135,6 +143,17 @@ define ['Phaser', './SealBoard'], (Phaser, SealBoard)->
             @seal.play("clap")
         when Seal.animationTypes.POFF
           @playRandomAnimation()
+
+
+    #plays a random sound
+    playRandomSound: ()=>
+      sounds = []
+      for soundKey,value of Seal.soundTypes
+        sounds.push(soundKey)
+      soundIndex = Math.floor(Math.random()*sounds.length)
+
+      sealSound = @game.sound.play(sounds[soundIndex], Math.random()*0.7, false);
+
 
     changeSide: (newSealBoard)=>
 
@@ -159,6 +178,8 @@ define ['Phaser', './SealBoard'], (Phaser, SealBoard)->
       , @)
 
 
+    #
+    #Set the Seal on a random position based on the parent normal a sealboard
     setRandomPosition: (relatedSeal = null)=>
       newX = 0
       newY = 0

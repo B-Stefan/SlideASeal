@@ -81,6 +81,10 @@ define ['Phaser',
     playRandomAnimation: ()=>
       for seal in @children
         @game.time.events.add(Phaser.Timer.SECOND * Math.random(), ()->
+
+          if Math.random() > 0.5
+            seal.playRandomSound()
+
           seal.playRandomAnimation()
         ,@)
 
