@@ -42,60 +42,59 @@ exports.GameSession = function (inSocket, inSessionId) {
     }
 
     function sendScore() {
-        // Player 1 on socket1
-        var score = {
-            you: {
-                name: socket1.name,
-                score: socket1.score,
-                side: "left"
-            },
-            rival: {
-                name: socket2.name,
-                score: socket2.score,
-                side: "right"
-            }
-        };
+        if (socket1 != undefined && socket2 != undefined ) {
+            // Player 1 on socket1
+            var score = {
+                you: {
+                    name: socket1.name,
+                    score: socket1.score,
+                    side: "left"
+                },
+                rival: {
+                    name: socket2.name,
+                    score: socket2.score,
+                    side: "right"
+                }
+            };
 
-        if (socket1 != undefined) {
+
             socket1.emit("Score", score);
-        }        
-
-        // Player 2 on socket2
-        score = {
-            you: {
-                name: socket2.name,
-                score: socket2.score,
-                side: "right"
-            },
-            rival: {
-                name: socket1.name,
-                score: socket1.score,
-                side: "left"
-            }
-        };
-
-        if (socket2 != undefined) {
+        }
+        if (socket2 != undefined && socket1 != undefined ) {
+            // Player 2 on socket2
+            score = {
+                you: {
+                    name: socket2.name,
+                    score: socket2.score,
+                    side: "right"
+                },
+                rival: {
+                    name: socket1.name,
+                    score: socket1.score,
+                    side: "left"
+                }
+            };
             socket2.emit("Score", score);
-        }
 
-        // Observer
-        score = {
-            info: "you are a observer",
-            player1: {
-                name: socket1.name,
-                score: socket1.score,
-                side: "left"
-            },
-            player2: {
-                name: socket2.name,
-                score: socket2.score,
-                side: "right"
+            // Observer
+            score = {
+                info: "you are a observer",
+                player1: {
+                    name: socket1.name,
+                    score: socket1.score,
+                    side: "left"
+                },
+                player2: {
+                    name: socket2.name,
+                    score: socket2.score,
+                    side: "right"
+                }
             }
-        }
 
-        _.each(observers, function(socket) {
-            socket.emit("Score", score);
-        });
+            _.each(observers, function(socket) {
+                socket.emit("Score", score);
+            });
+        }
     }
 
 

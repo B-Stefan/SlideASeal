@@ -45,6 +45,12 @@ define(['jquery', 'app/Game'], function ($, Game) {
             return $(this).find("input").val()
         }
 
+        $askPlayerName.find('input').keypress(function (e) {
+            if (e.which == 13) {
+                $askPlayerName.find("button[type=submit]").trigger("click");
+            }
+        });
+
         playerName = $askPlayerName.getPlayerName()
         /**
          * No Player name from server set
