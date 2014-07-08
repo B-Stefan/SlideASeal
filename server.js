@@ -109,9 +109,10 @@ var GameSession = require('./class/GameSession');
 
         socket.on("slidePostion", function(data) {
             var session = GameSession.findGameSession(GameSessions, socket.sessionid);
-
-            if(session.getGameState().checkSliderSocketById(socket.id)) {
-                session.sendSlidePostion(data);
+            if (session != undefined && session != null ){
+                if(session.getGameState().checkSliderSocketById(socket.id)) {
+                    session.sendSlidePostion(data);
+                }
             }
         });
 
