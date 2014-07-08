@@ -1,11 +1,47 @@
 define(['_', './Banner', './SealBoard', './Seal'], function (_, Banner,SealBoard,Seal) {
 
 
+    /**
+     * Text on the left side of the Game
+     */
     var lefttext;
+
+    /**
+     * Text on the right side of the Game
+     */
     var righttext;
+
+    /**
+     * Sealboard for the player on the left
+     */
     var leftSealBoard;
+
+    /**
+     * Sealboard for the player of the right
+     */
     var rightSealBoard;
+    /**
+     * Default total number of the seals (for both players, each player becomes numberOfSeals/2
+     * @type {number}
+     */
     var numberOfSealsTotal = 6;
+
+    /**
+     * Minimum than must have one player to change a seal side
+     * @type {number}
+     */
+    var numberOfPointMinimumToChangeSeals = 400
+
+    /**
+     * Per 100 points difference one seal change side (The price of a Seal)
+     * @type {number}
+     */
+    var numberOfPointsDifference = 100
+
+    /**
+     * The Game of the Sealboard
+     * @type {Phaser.Game}
+     */
     var game;
 
     /**
@@ -63,16 +99,24 @@ define(['_', './Banner', './SealBoard', './Seal'], function (_, Banner,SealBoard
     function changeSealSide(data){
 
 
+
         yourScore = data.you.score
-        otherScore = data.rival.score
+        rivalScore = data.rival.score
 
-        difference = Math.abs(yourScore-otherScore)
+        /**
+         * If you or the other less then numberOfPointMinimumToChangeSeals do nothing
+         */
+        if(yourScore < numberOfPointMinimumToChangeSeals || rivalScore < numberOfPointMinimumToChangeSeals){
+            return;
+        }
 
-        numberOfSealsToAdd = Math.floor(difference/60)              //Always round down
+        difference = Math.abs(yourScore-rivalScore)
+
+        numberOfSealsToAdd = Math.floor(difference/numberOfPointsDifference)              //Always round down
         newNumberOfSeals = numberOfSealsTotal/2+numberOfSealsToAdd
 
         //If you a good player
-        if(yourScore > otherScore){
+        if(yourScore > rivalScore){
            side = data.you.side
         }
         //Other is better
