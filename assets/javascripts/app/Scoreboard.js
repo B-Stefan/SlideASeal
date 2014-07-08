@@ -1,4 +1,4 @@
-define(['_', './Banner', './SealBoard', './Seal'], function (_, Banner,SealBoard,Seal) {
+define(['_', './Banner', './SealBoard', './Seal'], function (_, Banner, SealBoard, Seal) {
 
 
     /**
@@ -62,8 +62,8 @@ define(['_', './Banner', './SealBoard', './Seal'], function (_, Banner,SealBoard
         righttext = game.add.text(game.world.width - 15, 15, text, style);
         righttext.anchor.setTo(1, 0);
 
-        leftSealBoard = new SealBoard(game,Seal.sides.LEFT)
-        rightSealBoard = new SealBoard(game,Seal.sides.RIGHT)
+        leftSealBoard = new SealBoard(game, Seal.sides.LEFT)
+        rightSealBoard = new SealBoard(game, Seal.sides.RIGHT)
 
 
     }
@@ -78,11 +78,11 @@ define(['_', './Banner', './SealBoard', './Seal'], function (_, Banner,SealBoard
         console.log("rival score is: " + data.rival.score);
         console.log(data);
 
-        if(data.you.side == "left") {
+        if (data.you.side == "left") {
             lefttext.setText(data.you.name + "\n" + data.you.score);
             righttext.setText(data.rival.name + "\n" + data.rival.score);
 
-        } else if(data.you.side == "right") {
+        } else if (data.you.side == "right") {
             lefttext.setText(data.rival.name + "\n" + data.rival.score);
             righttext.setText(data.you.name + "\n" + data.you.score);
         }
@@ -96,8 +96,7 @@ define(['_', './Banner', './SealBoard', './Seal'], function (_, Banner,SealBoard
      * @param {Action} data - The scroe data from Server
      * @see Gamefield.js
      */
-    function changeSealSide(data){
-
+    function changeSealSide(data) {
 
 
         yourScore = data.you.score
@@ -106,49 +105,49 @@ define(['_', './Banner', './SealBoard', './Seal'], function (_, Banner,SealBoard
         /**
          * If you or the other less then numberOfPointMinimumToChangeSeals do nothing
          */
-        if(yourScore < numberOfPointMinimumToChangeSeals || rivalScore < numberOfPointMinimumToChangeSeals){
+        if (yourScore < numberOfPointMinimumToChangeSeals || rivalScore < numberOfPointMinimumToChangeSeals) {
             return;
         }
 
-        difference = Math.abs(yourScore-rivalScore)
+        difference = Math.abs(yourScore - rivalScore)
 
-        numberOfSealsToAdd = Math.floor(difference/numberOfPointsDifference)              //Always round down
-        newNumberOfSeals = numberOfSealsTotal/2+numberOfSealsToAdd
+        numberOfSealsToAdd = Math.floor(difference / numberOfPointsDifference)              //Always round down
+        newNumberOfSeals = numberOfSealsTotal / 2 + numberOfSealsToAdd
 
         //If you a good player
-        if(yourScore > rivalScore){
-           side = data.you.side
+        if (yourScore > rivalScore) {
+            side = data.you.side
         }
         //Other is better
-        else{
+        else {
             side = data.rival.side
         }
 
 
         //Get the right sealBoards
-        if(side == "left"){
-            sealBoard       = leftSealBoard
-            otherSealBoard  = rightSealBoard;
+        if (side == "left") {
+            sealBoard = leftSealBoard
+            otherSealBoard = rightSealBoard;
         }
-        else{
-            sealBoard       = rightSealBoard
-            otherSealBoard  = leftSealBoard;
+        else {
+            sealBoard = rightSealBoard
+            otherSealBoard = leftSealBoard;
         }
 
-        tween = sealBoard.changeSealSide(newNumberOfSeals,otherSealBoard)
+        tween = sealBoard.changeSealSide(newNumberOfSeals, otherSealBoard)
 
-        tween.onComplete.add(function(){
+        tween.onComplete.add(function () {
 
             yourSealBoard = getSealBoardBySide(data.you.side)
             rivalSealBoard = getSealBoardBySide(data.rival.side)
 
-            if (yourSealBoard.getNumberOfSeals() == 0 ){
-                Banner.play("you-lose",false)
+            if (yourSealBoard.getNumberOfSeals() == 0) {
+                Banner.play("you-lose", false)
             }
-            else if (rivalSealBoard.getNumberOfSeals() == 0 ){
-                Banner.play("you-win",false)
+            else if (rivalSealBoard.getNumberOfSeals() == 0) {
+                Banner.play("you-win", false)
             }
-        },this)
+        }, this)
 
     }
 
@@ -157,10 +156,10 @@ define(['_', './Banner', './SealBoard', './Seal'], function (_, Banner,SealBoard
      * @param {String} side it can be "left" or "right"
      * @returns {SealBoard}
      */
-    function getSealBoardBySide(side){
-        if (side == "left"){
+    function getSealBoardBySide(side) {
+        if (side == "left") {
             return leftSealBoard;
-        }else if (side == "right"){
+        } else if (side == "right") {
             return rightSealBoard;
         }
         throw new Error("Wrong side parameter")
@@ -173,17 +172,18 @@ define(['_', './Banner', './SealBoard', './Seal'], function (_, Banner,SealBoard
     function changeSealsForOneSide(side, newNumberOfSeals) {
 
     }
+
     /**
      * Show the sealbaords with a litel delay
      */
-    function show(){
+    function show() {
 
-        game.time.events.add(Phaser.Timer.SECOND * Math.random(), function(){
+        game.time.events.add(Phaser.Timer.SECOND * Math.random(), function () {
             leftSealBoard.show()
-        },this)
-        game.time.events.add(Phaser.Timer.SECOND * Math.random(), function(){
+        }, this)
+        game.time.events.add(Phaser.Timer.SECOND * Math.random(), function () {
             rightSealBoard.show()
-        },this)
+        }, this)
 
     }
 
