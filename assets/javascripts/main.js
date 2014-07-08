@@ -97,6 +97,7 @@ define(['jquery', 'app/Game'], function ($, Game) {
             $("#open-instruction").click(function () {
                 $("#instruction").fadeIn("slow");
                 $("#instruction-video")[0].play();
+                $("footer").fadeOut();
 
             });
 
@@ -106,6 +107,7 @@ define(['jquery', 'app/Game'], function ($, Game) {
             $("#instruction").click(function () {
                 $("#instruction").fadeOut("slow");
                 $("#instruction-video")[0].pause();
+                $("footer").fadeIn();
             });
 
 
