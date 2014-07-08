@@ -45,12 +45,13 @@ main {
 }
 
 footer {
-    margin-top: 10px;
-    margin-bottom: 10px;
+    margin-top: 25px;
+    margin-bottom: 25px;
     text-align: center;
     font-size: 20px;
     line-height: 25px;
     color: #014371;
+    z-index: -1;
 }
 
 .animated-delay-long{
@@ -87,6 +88,10 @@ button {
     border-radius: 3px;
     cursor: pointer;
     line-height: normal;
+    margin-left: auto;
+    margin-right: auto;
+    display: block;
+    margin-top: 25px;
 }
 /**
 * Specific layout for gamefield
@@ -187,11 +192,25 @@ button {
 #instruction {
     display: none;
     width: 100%;
-    height: 100%;
     top: 0px;
     left: 0px;
     position: absolute;
     z-index: 1000;
+    background-color: white;
+    -webkit-border-radius: 20px;
+    -moz-border-radius: 20px;
+    border-radius: 20px;
+    padding-bottom: 30px;
+}
+
+#instruction h2 {
+    text-align: center;
+    font-size: 25px;
+}
+
+#instruction div {
+    padding-left: 120px;
+    padding-right: 120px;
 }
 
 #instruction #instruction-video {
@@ -199,10 +218,9 @@ button {
     display: block;
     margin-left: auto;
     margin-right: auto;
-    margin-top: 120px;
 }
 
-#instruction div {
+#instruction #video-info {
     text-align: center;
     font-size: 30px;
     color: white;
