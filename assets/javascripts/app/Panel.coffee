@@ -212,21 +212,23 @@ define ['Phaser', "jquery"], (Phaser, $)->
       tween = @game.add.tween(@.scale).to({x: 0.001,y:0.001}, 300, Phaser.Easing.Quadratic.Out, false, 0, false);
       neighbour = @getNeighbour(Panel.moveDirections.TOP)
       tween.onComplete.add(()->
-        @destroy()
+        @parent.remove(@,true)
       ,@)
       if neighbour != null
         neighbourTween = neighbour.slide(Panel.moveDirections.DOWN)
         tween.onStart.add(()->
           neighbourTween.start()
         ,@)
-        neighbourTween
+
       return tween
 
 
     getNeighbour: (position)=>
       if not position of Panel.moveDirections
         throw new Error ("Please parse a Panel.moveDirection")
-
+      else if @parent == null or @parent == undefined
+        console.log("Get getNeighbour from panel without parent ", @getRow(), @getCol())
+        return null;
       result = null
 
       switch  position
