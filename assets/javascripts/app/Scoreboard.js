@@ -1,5 +1,6 @@
 define(['_', './Banner', './SealBoard', './Seal'], function (_, Banner,SealBoard,Seal) {
 
+
     var lefttext;
     var righttext;
     var leftSealBoard;
@@ -7,7 +8,10 @@ define(['_', './Banner', './SealBoard', './Seal'], function (_, Banner,SealBoard
     var numberOfSealsTotal = 6;
     var game;
 
-
+    /**
+     * Loads sprites and other resources
+     * @param {Phaser.Game} game2 - The game with the loader
+     */
     function create(game2) {
         game = game2
         var text = "Player 1";
@@ -53,6 +57,8 @@ define(['_', './Banner', './SealBoard', './Seal'], function (_, Banner,SealBoard
 
     /**
      * If the score difference between the two players > 60, one seal change the sides
+     * @param {Action} data - The scroe data from Server
+     * @see Gamefield.js
      */
     function changeSealSide(data){
 
@@ -102,6 +108,11 @@ define(['_', './Banner', './SealBoard', './Seal'], function (_, Banner,SealBoard
 
     }
 
+    /**
+     * Get the correct sealboard by the side
+     * @param {String} side it can be "left" or "right"
+     * @returns {SealBoard}
+     */
     function getSealBoardBySide(side){
         if (side == "left"){
             return leftSealBoard;
@@ -122,6 +133,7 @@ define(['_', './Banner', './SealBoard', './Seal'], function (_, Banner,SealBoard
      * Show the sealbaords with a litel delay
      */
     function show(){
+
         game.time.events.add(Phaser.Timer.SECOND * Math.random(), function(){
             leftSealBoard.show()
         },this)
@@ -130,6 +142,11 @@ define(['_', './Banner', './SealBoard', './Seal'], function (_, Banner,SealBoard
         },this)
 
     }
+
+
+    /**
+     * Return the module
+     */
     return {
         create: create,
         show: show,
