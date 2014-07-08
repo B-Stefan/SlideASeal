@@ -208,7 +208,7 @@ button {
     font-size: 25px;
 }
 
-#instruction div {
+#instruction #instruction-text {
     padding-left: 120px;
     padding-right: 120px;
 }
