@@ -12,7 +12,8 @@ var Action = require("./Action.js"),
 exports.Field = function () {
     /** @access private */
     //var field = generateTestField();
-    var field = generateRandomField();
+    //var field = generateRandomField();
+    var field = generateRandomFieldWithoutScore();
 
     purgeSpaces();
 
@@ -22,10 +23,46 @@ exports.Field = function () {
     }
 
     function generateRandomField() {
-        var newfield = []
+        var newfield = [];
         for(var i = 0; i < 5; i++) {
             newfield.push([getRandom(1, 7), getRandom(1, 7), getRandom(1, 7), getRandom(1, 7), getRandom(1, 7)]);
         }
+
+        return newfield;
+    }
+
+    function generateRandomFieldWithoutScore() {
+        var newfield = [];
+
+        function hasNoScore(inField) {
+
+            for(var m = 0; m < inField.length; m++) {
+                for(var t = 1; t < 7; t++){
+                    if(Field.countPanelsInSerie(t, inField[m]) >= 3) {
+                        return true;
+                    }
+
+                    var column = [];
+                    for(var i=0; i<5; i++) {
+                        column.push(inField[i][m]);
+                    }
+
+                    if(Field.countPanelsInSerie(t, column) >= 3) {
+                        return true;
+                    }
+                }
+            }
+
+            return false;
+        }
+
+        do {
+            newfield = [];
+
+            for(var i = 0; i < 5; i++) {
+                newfield.push([getRandom(1, 7), getRandom(1, 7), getRandom(1, 7), getRandom(1, 7), getRandom(1, 7)]);
+            }
+        } while(hasNoScore(newfield))
 
         return newfield;
     }
