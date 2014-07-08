@@ -220,6 +220,16 @@ button {
     margin-right: auto;
 }
 
+#instruction #instruction-close {
+    width: 40px;
+    height: 40px;
+    font-size: 70px;
+    position: absolute;
+    top: -40px;
+    right: -140px;
+    cursor: pointer;
+}
+
 #instruction #video-info {
     text-align: center;
     font-size: 30px;
