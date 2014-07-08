@@ -423,15 +423,18 @@ define ['Phaser',
     handleNetworkGameState: (gameState)=>
       #setCurrent player
       @game.setCurrentPlayer(new Player(gameState.currentPlayer,gameState.currentPlayer))
-
+      gameState = gameState
       #If actions in the gamestate
       if gameState.actions.length > 0
         lastTween = @handleNetworkActions(gameState.actions)
 
         if lastTween != null and lastTween != undefined
           lastTween.onComplete.add(()->
-            console.log("Repaint")
-            #@repaintGamefield(gameState.field)
+            self =@
+            window.setTimeout(()->
+              console.log("Repaint")
+              self.repaintGamefield(gameState.field)
+            ,1200)
           ,@)
         else
           throw new Error ("handleNetworkGameState=> @handleNetworkActions must return a Phaser.Tween ")
