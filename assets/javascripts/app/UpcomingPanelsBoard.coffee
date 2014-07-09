@@ -2,6 +2,7 @@ define ['Phaser', './Panel'], (Phaser,Panel)->
 
   #Class create a Board on the right side to show the new Panels
   #@see Panel
+  #@extends Phaser.Group
   class UpcommingPanelsBoard extends Phaser.Group
 
     #@static

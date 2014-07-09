@@ -2,6 +2,8 @@ define ['Phaser', './SealBoard'], (Phaser, SealBoard)->
 
 
   #This class controls one Seal on the screen
+  #@class
+  #@extends Phaser.Group
   class Seal extends Phaser.Group
     # Load all sprites and sounds
     # @static

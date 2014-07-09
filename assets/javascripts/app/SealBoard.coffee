@@ -4,6 +4,8 @@ define ['Phaser',
 
   #With the SealBoard class you can control a collection of Seals
   #@see Seal
+  #@class
+  #@extends Phaser.Group
   class SealBoard extends Phaser.Group
 
     #@static

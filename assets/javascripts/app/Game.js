@@ -17,6 +17,7 @@ define(['Phaser',
     function (Phaser, $, Panel, network, _, Gamefield, Scoreboard, Player, UpcomingPanelsBoard, SealBoard, Banner, Seal) {
 
         /**
+         * @class
          * The game class for a new Slide a seal instance
          * @param {String} the id of the gamefield
          * @param {string} the name of the player

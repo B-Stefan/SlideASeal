@@ -1,5 +1,11 @@
 define(['_'], function () {
     /**
+     * Provide functions to sho a simple text to the user
+     * @class
+     */
+
+
+    /**
      * Static game param
      */
     var game;

@@ -1,5 +1,7 @@
 define ['Phaser', "jquery"], (Phaser, $)->
 
+  #Define a panel type (ANCHOR, WHEEL)
+  #@class
   class PanelType
     @baseUrl = 'http://' + window.location.host + '/Images/panels/'
     @defaultExtention = '.png'
@@ -11,6 +13,9 @@ define ['Phaser', "jquery"], (Phaser, $)->
     getImageUrl: ()=>  PanelType.baseUrl + @name + PanelType.defaultExtention
 
 
+  #Define a Panel with background and row/col position
+  #@class Panel
+  #@extends Phaser.Group
   class Panel extends Phaser.Group
 
 
