@@ -29,7 +29,6 @@ define(['jquery', 'app/Game'], function ($, Game) {
 
     $(document).ready(function () {
 
-
         /**
          * Async get the name of the player
          * @type {jQuery.Deferred}

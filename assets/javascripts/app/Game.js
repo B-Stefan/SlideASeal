@@ -161,7 +161,6 @@ define(['Phaser',
 
             }
 
-
             /**
              * Update Loop by Phaser
              */

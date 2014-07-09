@@ -30,7 +30,7 @@ define(['_', './Banner', './SealBoard', './Seal'], function (_, Banner, SealBoar
      * Minimum than must have one player to change a seal side
      * @type {number}
      */
-    var numberOfPointMinimumToChangeSeals = 400
+    var numberOfPointMinimumToChangeSeals = 200
 
     /**
      * Per 100 points difference one seal change side (The price of a Seal)
@@ -105,7 +105,7 @@ define(['_', './Banner', './SealBoard', './Seal'], function (_, Banner, SealBoar
         /**
          * If you or the other less then numberOfPointMinimumToChangeSeals do nothing
          */
-        if (yourScore < numberOfPointMinimumToChangeSeals || rivalScore < numberOfPointMinimumToChangeSeals) {
+        if (!(yourScore > numberOfPointMinimumToChangeSeals || rivalScore > numberOfPointMinimumToChangeSeals)) {
             return;
         }
 
