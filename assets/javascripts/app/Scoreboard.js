@@ -89,6 +89,16 @@ define(['_', './Banner', './SealBoard', './Seal'], function (_, Banner, SealBoar
 
         changeSealSide(data)
 
+        yourSealBoard = getSealBoardBySide(data.you.side)
+        rivalSealBoard = getSealBoardBySide(data.rival.side)
+
+        if (yourSealBoard.getNumberOfSeals() == 0) {
+            Banner.play("you-lose", false)
+        }
+        else if (rivalSealBoard.getNumberOfSeals() == 0) {
+            Banner.play("you-win", false)
+        }
+
     }
 
     /**
@@ -136,18 +146,7 @@ define(['_', './Banner', './SealBoard', './Seal'], function (_, Banner, SealBoar
 
         tween = sealBoard.changeSealSide(newNumberOfSeals, otherSealBoard)
 
-        tween.onComplete.add(function () {
 
-            yourSealBoard = getSealBoardBySide(data.you.side)
-            rivalSealBoard = getSealBoardBySide(data.rival.side)
-
-            if (yourSealBoard.getNumberOfSeals() == 0) {
-                Banner.play("you-lose", false)
-            }
-            else if (rivalSealBoard.getNumberOfSeals() == 0) {
-                Banner.play("you-win", false)
-            }
-        }, this)
 
     }
 
