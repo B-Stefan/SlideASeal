@@ -20,6 +20,7 @@
 /wiki
 /packaging
 /doc
+/documentation
 npm-debug.log
 *.tmproj
 azure_error
