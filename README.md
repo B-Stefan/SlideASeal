@@ -3,6 +3,11 @@ SlideASeal
 
 A Slide a Lama remake
 
+#Live
+
+Live view on:  http://randalezentrale.de:3333
+
+
 #Dependencies
 * node.js
 * Mimosa (npm install mimosa -g)
@@ -12,10 +17,17 @@ A Slide a Lama remake
 2. npm install
 3. make
 
-#Client-Server Communication Protocol
+#Structure
 
-Our protocol you find under: PROROCOL.md
+##Client
+The client data is under assets/
 
+##Server
+The server source code you finde in server.js and class/ folder
+
+##Doc
+The project doc and presentation is under doc/
+and PROTOCOL.md
 
 
 #Sources

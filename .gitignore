@@ -19,6 +19,7 @@
 /rdoc
 /wiki
 /packaging
+/doc
 npm-debug.log
 *.tmproj
 azure_error
