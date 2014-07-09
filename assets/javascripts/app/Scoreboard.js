@@ -89,16 +89,6 @@ define(['_', './Banner', './SealBoard', './Seal'], function (_, Banner, SealBoar
 
         changeSealSide(data)
 
-        yourSealBoard = getSealBoardBySide(data.you.side)
-        rivalSealBoard = getSealBoardBySide(data.rival.side)
-
-        if (yourSealBoard.getNumberOfSeals() == 0) {
-            Banner.play("you-lose", false)
-        }
-        else if (rivalSealBoard.getNumberOfSeals() == 0) {
-            Banner.play("you-win", false)
-        }
-
     }
 
     /**
@@ -124,30 +114,30 @@ define(['_', './Banner', './SealBoard', './Seal'], function (_, Banner, SealBoar
         numberOfSealsToAdd = Math.floor(difference / numberOfPointsDifference)              //Always round down
         newNumberOfSeals = numberOfSealsTotal / 2 + numberOfSealsToAdd
 
+        yourSealBoard = getSealBoardBySide(data.you.side)
+        rivalSealBoard = getSealBoardBySide(data.rival.side)
+
         //If you a good player
-        if (yourScore > rivalScore) {
-            side = data.you.side
+        if (yourScore < rivalScore) {
+            tween = yourSealBoard.changeSealSide(newNumberOfSeals, rivalSealBoard)
         }
         //Other is better
         else {
-            side = data.rival.side
+            tween = rivalSealBoard.changeSealSide(newNumberOfSeals, yourSealBoard)
         }
 
-
-        //Get the right sealBoards
-        if (side == "left") {
-            sealBoard = leftSealBoard
-            otherSealBoard = rightSealBoard;
+        /**
+         * SHow win / lose banner
+         */
+        tween.onComplete.add(function(){
+            if (yourSealBoard.getNumberOfSeals() == 0) {
+                Banner.play("you-lose", false)
+            }
+            else if (rivalSealBoard.getNumberOfSeals() == 0) {
+                Banner.play("you-win", false)
+            }
         }
-        else {
-            sealBoard = rightSealBoard
-            otherSealBoard = leftSealBoard;
-        }
-
-        tween = sealBoard.changeSealSide(newNumberOfSeals, otherSealBoard)
-
-
-
+        ,this)
     }
 
     /**
