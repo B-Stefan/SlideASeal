@@ -7,6 +7,16 @@ A Slide a Lama remake
 
 Live view on:  http://slide-a-seal.herokuapp.com/
 
+#Gameplay 
+
+
+##Start game 
+![Image](/assets/Images/Gameplay-Start-1.png?raw=true)
+![Image](/assets/Images/Gameplay-Start-2.png?raw=true)
+
+##Running game
+
+![Image](/assets/Images/Gameplay.gif?raw=true)
 
 #Dependencies
 * node.js
@@ -15,7 +25,7 @@ Live view on:  http://slide-a-seal.herokuapp.com/
 #Run local
 1. git clone https://github.com/B-Stefan/SlideASeal
 2. npm install
-3. make
+3. make 
 
 #Structure
 
