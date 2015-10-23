@@ -5,7 +5,7 @@ A Slide a Lama remake
 
 #Live
 
-Live view on:  http://randalezentrale.de:3333
+Live view on:  
 
 
 #Dependencies
