@@ -28,7 +28,6 @@ what
 *.sublime-workspace
 
 # Output folder
-/public
 /dist
 /.mimosa/require/tracking.json
 

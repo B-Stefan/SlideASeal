@@ -31,6 +31,7 @@ var GameSession = require('./class/GameSession');
     app.use(express.compress());
     app.use(app.router);
     app.use(require("sass-middleware")({ src: __dirname + "/assets/sass", dest: __dirname + '/public/stylesheets' }));
+    app.use(express.static(path.join(__dirname, "assets")));
     app.use(express.static(path.join(__dirname, "public")));
 
     // development only
