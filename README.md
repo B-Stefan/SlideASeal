@@ -5,7 +5,7 @@ A Slide a Lama remake
 
 #Live
 
-Live view on:  
+Live view on:  http://slide-a-seal.herokuapp.com/
 
 
 #Dependencies
